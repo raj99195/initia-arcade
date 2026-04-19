@@ -10,7 +10,7 @@ const CHAIN_ID = "initiation-2";
 export default function Home() {
   const navigate = useNavigate();
   const { isConnected } = useAccount();
-  const { submitTxBlock, estimateGas, autoSign, initiaAddress } = useInterwovenKit();
+  const { submitTxBlock, autoSign, initiaAddress, openConnect } = useInterwovenKit();
   const { games } = useGames();
   const featured = games.slice(0, 4);
   const [txLoading, setTxLoading] = useState(false);
