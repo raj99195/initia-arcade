@@ -1,0 +1,12 @@
+{
+  "project_name": "InitiaArcade",
+  "repo_url": "https://github.com/raj99195/initia-arcade",
+  "commit_sha": "dfc34c8a021bff3b71796b544c27c671d4d688f4",
+  "rollup_chain_id": "initia-arcade-1",
+  "deployed_address": "0xd1aa08d2de31ca1af55682f4185547f92332bee",
+  "vm": "move",
+  "native_feature": "auto-signing",
+  "core_logic_path": "contracts/platform.move",
+  "native_feature_frontend_path": "src/components/EnableAutoSign.jsx",
+  "demo_video_url": "https://youtu.be/REPLACE_WITH_YOUR_VIDEO"
+}
