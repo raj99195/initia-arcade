@@ -122,7 +122,7 @@ export default function Leaderboard() {
             {refreshing ? "..." : "↻ Refresh"}
           </button>
         </div>
-        <p style={{ color: "#2a1a4a", fontSize: 12, marginTop: 6, fontFamily: "'Rajdhani',sans-serif" }}>
+        <p style={{ color: "#7755aa", fontSize: 12, marginTop: 6, fontFamily: "'Rajdhani',sans-serif" }}>
           Tamper-proof scores from Initia blockchain — verified every block.
         </p>
       </div>
@@ -145,7 +145,7 @@ export default function Leaderboard() {
           ].map((s, i) => (
             <div key={s.label} style={{ textAlign: "center", padding: "0 20px", borderLeft: "1px solid rgba(123,47,255,0.1)" }}>
               <div style={{ fontSize: 22, fontWeight: 700, color: s.color, fontFamily: "'Rajdhani',sans-serif" }}>{s.value}</div>
-              <div style={{ fontSize: 9, color: "#2a1a4a", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.8px", fontFamily: "'Rajdhani',sans-serif" }}>{s.label}</div>
+              <div style={{ fontSize: 9, color: "#7755aa", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.8px", fontFamily: "'Rajdhani',sans-serif" }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -193,7 +193,7 @@ export default function Leaderboard() {
               <span style={{ fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, fontSize: 13, color: "#fff", letterSpacing: "0.3px" }}>
                 {activeTab === "global" ? "Top Players" : selectedGame === "all" ? "All Scores" : `Game #${selectedGame}`}
               </span>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: "#2a1a4a", fontFamily: "'Rajdhani',sans-serif" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>
                 <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88", animation: "lbPulse 1.5s ease-in-out infinite" }} />
                 Live · {displayData.length} entries
               </div>
@@ -202,23 +202,23 @@ export default function Leaderboard() {
             {/* Col headers */}
             <div style={{
               display: "grid",
-              gridTemplateColumns: activeTab === "global" ? "48px 1fr 130px 90px 90px" : "48px 1fr 130px 90px",
+              gridTemplateColumns: activeTab === "global" ? "48px 1fr 130px 90px" : "48px 1fr 130px 90px",
               padding: "8px 20px", borderBottom: "1px solid rgba(123,47,255,0.06)",
             }}>
-              {(activeTab === "global" ? ["Rank", "Player", "Best Game", "Score", "Total"] : ["Rank", "Player", "Game", "Score"])
+              {["Rank", "Player", activeTab === "global" ? "Best Game" : "Game", "Score"]
                 .map((h, i) => (
-                  <div key={i} style={{ fontSize: 9, color: "#2a1a4a", textTransform: "uppercase", letterSpacing: "1px", textAlign: i >= 3 ? "right" : "left", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>{h}</div>
+                  <div key={i} style={{ fontSize: 9, color: "#7755aa", textTransform: "uppercase", letterSpacing: "1px", textAlign: i >= 3 ? "right" : "left", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>{h}</div>
                 ))}
             </div>
 
             {loading ? (
-              <div style={{ padding: 48, textAlign: "center", fontSize: 12, color: "#2a1a4a", fontFamily: "'Rajdhani',sans-serif" }}>
+              <div style={{ padding: 48, textAlign: "center", fontSize: 12, color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>
                 Loading scores...
               </div>
             ) : displayData.length === 0 ? (
               <div style={{ padding: 64, textAlign: "center" }}>
                 <div style={{ fontSize: 40, marginBottom: 14 }}>🏆</div>
-                <div style={{ fontSize: 13, color: "#3a2a5a", fontFamily: "'Rajdhani',sans-serif" }}>No scores yet</div>
+                <div style={{ fontSize: 13, color: "#9977cc", fontFamily: "'Rajdhani',sans-serif" }}>No scores yet</div>
                 <button onClick={() => navigate("/games")} style={{
                   marginTop: 12, padding: "8px 18px",
                   background: "linear-gradient(135deg,#7B2FFF,#5a1fd4)",
@@ -232,7 +232,7 @@ export default function Leaderboard() {
                 return (
                   <div key={idx} className="lb-row" style={{
                     display: "grid",
-                    gridTemplateColumns: activeTab === "global" ? "48px 1fr 130px 90px 90px" : "48px 1fr 130px 90px",
+                    gridTemplateColumns: activeTab === "global" ? "48px 1fr 130px 90px" : "48px 1fr 130px 90px",
                     padding: "12px 20px",
                     borderBottom: "1px solid rgba(123,47,255,0.04)",
                     background: isMe ? "rgba(123,47,255,0.08)" : "transparent",
@@ -242,26 +242,22 @@ export default function Leaderboard() {
                       {row.rank <= 3 ? (
                         <span style={{ fontSize: 16 }}>{["🥇","🥈","🥉"][row.rank-1]}</span>
                       ) : (
-                        <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 9, color: "#2a1a4a" }}>{row.rank}</span>
+                        <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 9, color: "#7755aa" }}>{row.rank}</span>
                       )}
                     </div>
                     <div style={{ alignSelf: "center" }}>
                       <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 8, color: isMe ? "#a67fff" : "#5533aa" }}>
                         {shortAddr(row.player)}
                       </div>
-                      {isMe && <div style={{ fontSize: 9, color: "#3a2a5a", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>← You</div>}
+                      {isMe && <div style={{ fontSize: 9, color: "#9977cc", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>← You</div>}
                     </div>
-                    <div style={{ fontSize: 11, color: "#3a2a5a", alignSelf: "center", fontFamily: "'Rajdhani',sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <div style={{ fontSize: 11, color: "#9977cc", alignSelf: "center", fontFamily: "'Rajdhani',sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {activeTab === "global" ? (row.bestGame || "—") : (row.gameName || `Game #${row.gameId}`)}
                     </div>
                     <div style={{ fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, fontSize: 13, color: rankColors[row.rank] || "#a67fff", textAlign: "right", alignSelf: "center" }}>
                       {fmtScore(activeTab === "global" ? row.bestScore : row.score)}
                     </div>
-                    {activeTab === "global" && (
-                      <div style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 11, color: "#2a1a4a", textAlign: "right", alignSelf: "center" }}>
-                        {fmtScore(row.totalScore)}
-                      </div>
-                    )}
+
                   </div>
                 );
               })
@@ -274,7 +270,7 @@ export default function Leaderboard() {
 
           {/* Your Rank */}
           <div style={{ background: "#0e0c1a", border: "1px solid rgba(123,47,255,0.1)", borderRadius: 10, padding: 20 }}>
-            <div style={{ fontSize: 9, color: "#2a1a4a", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, marginBottom: 12 }}>
+            <div style={{ fontSize: 9, color: "#7755aa", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, marginBottom: 12 }}>
               Your Rank
             </div>
             {isConnected ? (
@@ -283,25 +279,25 @@ export default function Leaderboard() {
                   <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 38, fontWeight: 700, color: "#a67fff", letterSpacing: "-1px", marginBottom: 4 }}>
                     {myRank > 0 ? `#${myRank}` : "—"}
                   </div>
-                  <div style={{ fontSize: 10, color: "#2a1a4a", marginBottom: 16, fontFamily: "'Rajdhani',sans-serif" }}>Global ranking</div>
+                  <div style={{ fontSize: 10, color: "#7755aa", marginBottom: 16, fontFamily: "'Rajdhani',sans-serif" }}>Global ranking</div>
                   {[["Best Score", fmtScore(myStats.bestScore)], ["Total Score", fmtScore(myStats.totalScore)], ["Games Played", myStats.gamesPlayed]].map(([k, v]) => (
                     <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, marginBottom: 8, paddingBottom: 8, borderBottom: "1px solid rgba(123,47,255,0.06)" }}>
-                      <span style={{ color: "#2a1a4a", fontFamily: "'Rajdhani',sans-serif" }}>{k}</span>
+                      <span style={{ color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>{k}</span>
                       <span style={{ color: "#7755bb", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>{v}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div style={{ fontSize: 12, color: "#2a1a4a", fontFamily: "'Rajdhani',sans-serif" }}>No scores yet — play!</div>
+                <div style={{ fontSize: 12, color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>No scores yet — play!</div>
               )
             ) : (
-              <div style={{ fontSize: 11, color: "#2a1a4a", fontFamily: "'Rajdhani',sans-serif" }}>Connect wallet to see your rank</div>
+              <div style={{ fontSize: 11, color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>Connect wallet to see your rank</div>
             )}
           </div>
 
           {/* Top Games */}
           <div style={{ background: "#0e0c1a", border: "1px solid rgba(123,47,255,0.1)", borderRadius: 10, padding: 20 }}>
-            <div style={{ fontSize: 9, color: "#2a1a4a", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, marginBottom: 14 }}>
+            <div style={{ fontSize: 9, color: "#7755aa", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, marginBottom: 14 }}>
               Top Games
             </div>
             {games.slice(0, 5).map((g, i) => {
@@ -309,10 +305,10 @@ export default function Leaderboard() {
               return (
                 <div key={g.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, marginBottom: 10, paddingBottom: 10, borderBottom: "1px solid rgba(123,47,255,0.05)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 8, color: "#2a1a4a", minWidth: 14 }}>{i + 1}</span>
-                    <span style={{ color: "#3a2a5a", fontFamily: "'Rajdhani',sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 110 }}>{g.name}</span>
+                    <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 8, color: "#7755aa", minWidth: 14 }}>{i + 1}</span>
+                    <span style={{ color: "#9977cc", fontFamily: "'Rajdhani',sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 110 }}>{g.name}</span>
                   </div>
-                  <span style={{ fontSize: 9, color: "#2a1a4a", fontFamily: "'Orbitron',sans-serif" }}>{cnt}</span>
+                  <span style={{ fontSize: 9, color: "#7755aa", fontFamily: "'Orbitron',sans-serif" }}>{cnt}</span>
                 </div>
               );
             })}
@@ -329,7 +325,7 @@ export default function Leaderboard() {
               "Tamper-proof — verified on-chain",
               "Leaderboard updates instantly",
             ].map((t, i) => (
-              <div key={i} style={{ display: "flex", gap: 8, fontSize: 11, color: "#2a1a4a", marginBottom: 7, lineHeight: 1.5 }}>
+              <div key={i} style={{ display: "flex", gap: 8, fontSize: 11, color: "#7755aa", marginBottom: 7, lineHeight: 1.5 }}>
                 <span style={{ color: "#5533aa", flexShrink: 0, fontWeight: 700, fontFamily: "'Orbitron',sans-serif", fontSize: 8 }}>0{i+1}</span>
                 <span style={{ fontFamily: "'Rajdhani',sans-serif" }}>{t}</span>
               </div>

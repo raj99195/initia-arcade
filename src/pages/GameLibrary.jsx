@@ -37,19 +37,7 @@ export default function GameLibrary() {
               Games
             </span>
           </h1>
-          <button onClick={() => navigate("/publish")} style={{
-            padding: "9px 18px",
-            background: "linear-gradient(135deg,#7B2FFF,#5a1fd4)",
-            border: "none", borderRadius: 7,
-            fontSize: 12, fontWeight: 700, color: "#fff", cursor: "pointer",
-            fontFamily: "'Rajdhani',sans-serif", letterSpacing: "1px",
-            textTransform: "uppercase", transition: "all 0.18s",
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = "linear-gradient(135deg,#8f44ff,#6b2fe8)"}
-          onMouseLeave={e => e.currentTarget.style.background = "linear-gradient(135deg,#7B2FFF,#5a1fd4)"}
-          >
-            + Publish Game
-          </button>
+
         </div>
       </div>
 
@@ -60,12 +48,12 @@ export default function GameLibrary() {
             padding: "6px 15px", borderRadius: 20,
             border: `1px solid ${active === cat ? "rgba(123,47,255,0.4)" : "rgba(123,47,255,0.1)"}`,
             background: active === cat ? "rgba(123,47,255,0.12)" : "transparent",
-            color: active === cat ? "#c4a0ff" : "#2a1a4a",
+            color: active === cat ? "#c4a0ff" : "#7755aa",
             fontSize: 11, cursor: "pointer", transition: "all 0.18s",
             fontFamily: "'Rajdhani',sans-serif", fontWeight: 600, letterSpacing: "0.3px",
           }}
-          onMouseEnter={e => { if (active !== cat) { e.currentTarget.style.borderColor = "rgba(123,47,255,0.25)"; e.currentTarget.style.color = "#5533aa"; }}}
-          onMouseLeave={e => { if (active !== cat) { e.currentTarget.style.borderColor = "rgba(123,47,255,0.1)"; e.currentTarget.style.color = "#2a1a4a"; }}}
+          onMouseEnter={e => { if (active !== cat) { e.currentTarget.style.borderColor = "rgba(123,47,255,0.25)"; e.currentTarget.style.color = "#a67fff"; }}}
+          onMouseLeave={e => { if (active !== cat) { e.currentTarget.style.borderColor = "rgba(123,47,255,0.1)"; e.currentTarget.style.color = "#7755aa"; }}}
           >
             {cat}
           </button>
@@ -74,7 +62,7 @@ export default function GameLibrary() {
 
       {/* Loading */}
       {loading && (
-        <div style={{ padding: 48, textAlign: "center", fontSize: 12, color: "#2a1a4a", fontFamily: "'Rajdhani',sans-serif" }}>
+        <div style={{ padding: 48, textAlign: "center", fontSize: 12, color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>
           Loading games from chain...
         </div>
       )}
@@ -83,17 +71,10 @@ export default function GameLibrary() {
       {!loading && filtered.length === 0 && (
         <div style={{ padding: 64, textAlign: "center" }}>
           <div style={{ fontSize: 44, marginBottom: 14 }}>🎮</div>
-          <div style={{ fontSize: 14, color: "#3a2a5a", marginBottom: 8, fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>
+          <div style={{ fontSize: 14, color: "#9977cc", marginBottom: 8, fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>
             {active === "All" ? "No approved games yet" : `No ${active} games yet`}
           </div>
-          <button onClick={() => navigate("/publish")} style={{
-            marginTop: 8, padding: "9px 20px",
-            background: "linear-gradient(135deg,#7B2FFF,#5a1fd4)",
-            border: "none", borderRadius: 6, color: "#fff", fontSize: 12,
-            cursor: "pointer", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700,
-          }}>
-            Publish First Game →
-          </button>
+
         </div>
       )}
 

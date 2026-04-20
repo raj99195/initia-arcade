@@ -206,7 +206,7 @@ export default function Creator() {
     finally { setGamesLoading(false); }
   };
 
-  useEffect(() => { if (initiaAddress && creatorStatus === "approved") fetchMyGames(); }, [initiaAddress, creatorStatus]);
+  useEffect(() => { if (initiaAddress && (creatorStatus === "approved" || creatorStatus === "pending")) fetchMyGames(); }, [initiaAddress, creatorStatus]);
 
   const fetchAndInitArcade = async () => {
     if (!initiaAddress) return;
