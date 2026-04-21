@@ -293,26 +293,7 @@ export default function Home() {
               >View All</button>
             </div>
           </div>
-          {/* ARCADE balance row */}
-          {isConnected && balance !== null && (
-            <div style={{ display:"flex", alignItems:"center", gap:7, padding:"7px 10px", background:"rgba(123,47,255,0.08)", border:"1px solid rgba(123,47,255,0.18)", borderRadius:7 }}>
-              {/* ARCADE coin icon */}
-              <div style={{
-                width:22, height:22, borderRadius:"50%",
-                background:"linear-gradient(135deg,#7B2FFF,#00d4ff)",
-                display:"flex", alignItems:"center", justifyContent:"center",
-                fontSize:10, fontWeight:900, color:"#fff",
-                fontFamily:"'Orbitron',sans-serif", flexShrink:0,
-                boxShadow:"0 0 6px rgba(123,47,255,0.5)",
-              }}>A</div>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontFamily:"'Orbitron',sans-serif", fontWeight:700, fontSize:11, color:"#a67fff", lineHeight:1 }}>
-                  {Number(balance).toLocaleString()}
-                </div>
-                <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8, color:"#5533aa", textTransform:"uppercase", letterSpacing:"0.5px" }}>ARCADE Balance</div>
-              </div>
-            </div>
-          )}
+
         </div>
 
         {/* ── Top 3 Podium ── */}
@@ -382,7 +363,7 @@ export default function Home() {
           ))}
 
           {/* ── Initia Info Panel — hamesha visible ── */}
-          <div style={{ padding:"10px" }}>
+          <div style={{ padding:"8px 8px 0" }}>
             <div style={{ background:"linear-gradient(180deg,rgba(20,8,40,0.95),rgba(10,4,25,0.98))", borderRadius:10, overflow:"hidden", border:"1px solid rgba(123,47,255,0.2)" }}>
 
               {/* Header */}
@@ -400,8 +381,7 @@ export default function Home() {
 
               {/* 4 features */}
               {[
-                { title:"Built on Initia",       desc:"Leveraging Initia's L1 and interwoven rollups for unmatched scalability.",
-                  svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><text x="13" y="18" textAnchor="middle" fill="white" fontSize="13" fontWeight="900" fontFamily="Arial Black,Arial">I</text></svg> },
+                { title:"Built on Initia",       desc:"Leveraging Initia's L1 and interwoven rollups for unmatched scalability.", icon:"initia" },
                 { title:"True Ownership",         desc:"Every asset you earn or create is on-chain. You own it. Always.",
                   svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><path d="M13 7l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L7.2 11.2l4-.6z" stroke="#c4a0ff" strokeWidth="1.1" fill="none" strokeLinejoin="round"/></svg> },
                 { title:"Play. Earn. Repeat.",    desc:"Engage in gameplay. Earn real rewards. Grow your journey.",
@@ -411,7 +391,10 @@ export default function Home() {
               ].map((item, i) => (
                 <div key={i} style={{ display:"flex", gap:9, padding:"11px 12px", borderBottom:i<3?"1px solid rgba(123,47,255,0.07)":"none", alignItems:"flex-start" }}>
                   <div style={{ display:"flex", flexDirection:"column", alignItems:"center", flexShrink:0 }}>
-                    {item.svg}
+                    {item.icon === "initia"
+                      ? <img src="/initia-logo.svg" alt="Initia" style={{ width:26, height:26, borderRadius:"50%" }} />
+                      : item.svg
+                    }
                     {i<3 && <div style={{ width:1, height:14, background:"rgba(123,47,255,0.3)", marginTop:2 }} />}
                   </div>
                   <div style={{ paddingTop:2 }}>
@@ -423,7 +406,7 @@ export default function Home() {
 
               {/* Footer */}
               <div style={{ padding:"11px 12px", borderTop:"1px solid rgba(123,47,255,0.1)", display:"flex", alignItems:"center", gap:8, background:"rgba(123,47,255,0.04)" }}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#1a0a2e" stroke="rgba(123,47,255,0.5)" strokeWidth="1"/><text x="10" y="14.5" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" fontFamily="Arial Black,Arial">I</text></svg>
+                <img src="/initia-logo.svg" alt="Initia" style={{ width:20, height:20, borderRadius:"50%" }} />
                 <div>
                   <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:10, color:"#c4a0ff" }}>Initia</div>
                   <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8, color:"#5533aa" }}>One Network. Infinite Games.</div>
