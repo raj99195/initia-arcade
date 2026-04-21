@@ -6,11 +6,13 @@ import { useGames } from "../hooks/useGames";
 import GameCard from "../components/GameCard";
 import { useEffect, useState } from "react";
 import { getScores } from "../lib/gameService";
+import { useArcadeBalance } from "../hooks/useArcadeBalance";
 
 export default function Home() {
   const navigate = useNavigate();
   const { isConnected } = useAccount();
   const { openConnect, autoSign } = useInterwovenKit();
+  const { balance } = useArcadeBalance();
   const { games } = useGames();
   const [scores, setScores] = useState([]);
   const [page, setPage] = useState(0);
@@ -274,20 +276,43 @@ export default function Home() {
         <div style={{ position: "absolute", top: -40, left: "50%", transform: "translateX(-50%)", width: 200, height: 200, background: "radial-gradient(circle, rgba(123,47,255,0.18) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
         {/* Header */}
-        <div style={{ position: "relative", zIndex: 1, padding: "14px 16px 12px", borderBottom: "1px solid rgba(123,47,255,0.15)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <span style={{ fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "1.5px", color: "#e0d0ff" }}>
-            Live Leaderboard
-          </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88", animation: "lbPulse 1.5s ease-in-out infinite" }} />
-              <span style={{ fontSize: 9, color: "#4aaa6a", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700 }}>Live</span>
+        <div style={{ position:"relative", zIndex:1, padding:"10px 14px 10px", borderBottom:"1px solid rgba(123,47,255,0.15)", flexShrink:0 }}>
+          {/* Top row: title + live + view all */}
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:8 }}>
+            <span style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:11, textTransform:"uppercase", letterSpacing:"1.5px", color:"#e0d0ff" }}>
+              Live Leaderboard
+            </span>
+            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+                <span style={{ width:5, height:5, borderRadius:"50%", background:"#00FF88", animation:"lbPulse 1.5s ease-in-out infinite" }} />
+                <span style={{ fontSize:9, color:"#4aaa6a", fontFamily:"'Rajdhani',sans-serif", fontWeight:700 }}>Live</span>
+              </div>
+              <button onClick={()=>navigate("/leaderboard")} style={{ fontSize:9, color:"#8866cc", background:"transparent", border:"none", cursor:"pointer", fontFamily:"'Rajdhani',sans-serif", fontWeight:700, letterSpacing:"0.5px", textTransform:"uppercase", transition:"color 0.15s" }}
+              onMouseEnter={e=>e.currentTarget.style.color="#c4a0ff"}
+              onMouseLeave={e=>e.currentTarget.style.color="#8866cc"}
+              >View All</button>
             </div>
-            <button onClick={() => navigate("/leaderboard")} style={{ fontSize: 9, color: "#8866cc", background: "transparent", border: "none", cursor: "pointer", fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase", transition: "color 0.15s" }}
-            onMouseEnter={e => e.currentTarget.style.color = "#c4a0ff"}
-            onMouseLeave={e => e.currentTarget.style.color = "#8866cc"}
-            >View All</button>
           </div>
+          {/* ARCADE balance row */}
+          {isConnected && balance !== null && (
+            <div style={{ display:"flex", alignItems:"center", gap:7, padding:"7px 10px", background:"rgba(123,47,255,0.08)", border:"1px solid rgba(123,47,255,0.18)", borderRadius:7 }}>
+              {/* ARCADE coin icon */}
+              <div style={{
+                width:22, height:22, borderRadius:"50%",
+                background:"linear-gradient(135deg,#7B2FFF,#00d4ff)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+                fontSize:10, fontWeight:900, color:"#fff",
+                fontFamily:"'Orbitron',sans-serif", flexShrink:0,
+                boxShadow:"0 0 6px rgba(123,47,255,0.5)",
+              }}>A</div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontFamily:"'Orbitron',sans-serif", fontWeight:700, fontSize:11, color:"#a67fff", lineHeight:1 }}>
+                  {Number(balance).toLocaleString()}
+                </div>
+                <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8, color:"#5533aa", textTransform:"uppercase", letterSpacing:"0.5px" }}>ARCADE Balance</div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ── Top 3 Podium ── */}
@@ -336,62 +361,56 @@ export default function Home() {
         {/* Rows 4-8 + Initia Banner when empty */}
         <div style={{ flex: 1, overflowY: "auto", position: "relative", zIndex: 1 }}>
           {leaderboard.length === 0 ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "16px 14px", gap: 12 }}>
-              {/* Initia x InitiaArcade Banner */}
-              <div style={{ width: "100%", borderRadius: 10, overflow: "hidden", background: "linear-gradient(135deg, rgba(123,47,255,0.15), rgba(0,212,255,0.08))", border: "1px solid rgba(123,47,255,0.22)", padding: "18px 14px", textAlign: "center", position: "relative" }}>
-                {/* Portal SVG illustration */}
-                <div style={{ margin: "0 auto 12px", position: "relative", width: 64, height: 64 }}>
-                  <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "radial-gradient(circle, rgba(123,47,255,0.45), transparent 70%)" }} />
-                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                    {/* Outer arch */}
-                    <ellipse cx="32" cy="32" rx="26" ry="30" stroke="rgba(123,47,255,0.6)" strokeWidth="1.5" fill="rgba(123,47,255,0.07)"/>
-                    {/* Middle arch */}
-                    <ellipse cx="32" cy="32" rx="18" ry="22" stroke="rgba(0,212,255,0.5)" strokeWidth="1" fill="rgba(0,212,255,0.04)"/>
-                    {/* Inner glow */}
-                    <ellipse cx="32" cy="32" rx="9" ry="11" fill="rgba(180,150,255,0.25)" stroke="rgba(123,47,255,0.9)" strokeWidth="1"/>
-                    {/* Initia I */}
-                    <text x="32" y="37" textAnchor="middle" fill="white" fontSize="12" fontWeight="900" fontFamily="Arial">I</text>
-                    {/* Stars scattered */}
-                    <circle cx="10" cy="12" r="1.2" fill="rgba(180,150,255,0.8)"/>
-                    <circle cx="54" cy="8"  r="1"   fill="rgba(0,212,255,0.8)"/>
-                    <circle cx="6"  cy="44" r="0.9" fill="rgba(255,255,255,0.5)"/>
-                    <circle cx="58" cy="48" r="1.1" fill="rgba(180,150,255,0.6)"/>
-                    <circle cx="18" cy="56" r="0.8" fill="rgba(0,212,255,0.6)"/>
-                    <circle cx="46" cy="54" r="1"   fill="rgba(255,255,255,0.4)"/>
-                    {/* Floating rocks */}
-                    <rect x="2"  y="28" width="4" height="3" rx="1" fill="rgba(123,47,255,0.4)" transform="rotate(-15 2 28)"/>
-                    <rect x="58" y="22" width="3" height="2" rx="1" fill="rgba(0,212,255,0.4)" transform="rotate(20 58 22)"/>
-                  </svg>
+            <div style={{ overflowY:"auto", height:"100%", padding:"10px 10px" }}>
+              <div style={{ background:"linear-gradient(180deg,rgba(20,8,40,0.95),rgba(10,4,25,0.98))", borderRadius:10, overflow:"hidden", border:"1px solid rgba(123,47,255,0.2)" }}>
+
+                {/* Header */}
+                <div style={{ padding:"14px 12px 10px", textAlign:"center", borderBottom:"1px solid rgba(123,47,255,0.1)", background:"rgba(123,47,255,0.05)" }}>
+                  <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:11, color:"#fff", textTransform:"uppercase", letterSpacing:"0.8px", lineHeight:1.4, marginBottom:6 }}>
+                    Built on Initia.<br/>
+                    <span style={{ background:"linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
+                      Powered by the Future.
+                    </span>
+                  </div>
+                  <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8.5, color:"#7755aa", lineHeight:1.6 }}>
+                    Initia Arcade is built on Initia — the interwoven rollup network for scalable, secure on-chain gaming.
+                  </div>
                 </div>
 
-                <div style={{ fontFamily: "'Rajdhani',sans-serif", fontWeight: 700, fontSize: 12, color: "#c4a0ff", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>
-                  Built on Initia
-                </div>
-                <div style={{ fontFamily: "'Rajdhani',sans-serif", fontSize: 10, color: "#7755aa", lineHeight: 1.6, marginBottom: 12 }}>
-                  Every score recorded on-chain.<br/>Tamper-proof. Verifiable. Yours.
-                </div>
+                {/* 4 features */}
+                {[
+                  { title:"Built on Initia", desc:"Leveraging Initia's L1 and interwoven rollups for unmatched scalability.",
+                    svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><text x="13" y="18" textAnchor="middle" fill="white" fontSize="13" fontWeight="900" fontFamily="Arial Black,Arial">I</text></svg> },
+                  { title:"True Ownership", desc:"Every asset you earn or create is on-chain. You own it. Always.",
+                    svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><path d="M13 7l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L7.2 11.2l4-.6z" stroke="#c4a0ff" strokeWidth="1.1" fill="none" strokeLinejoin="round"/></svg> },
+                  { title:"Play. Earn. Repeat.", desc:"Engage in gameplay. Earn real rewards. Grow your journey.",
+                    svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><rect x="7" y="11" width="12" height="7" rx="2" stroke="#c4a0ff" strokeWidth="1.1" fill="none"/><path d="M10 14.5v-2M9 13.5h2" stroke="#c4a0ff" strokeWidth="1" strokeLinecap="round"/><circle cx="16" cy="14.5" r="0.8" fill="#c4a0ff"/><path d="M10 11V8.5M16 11V8.5" stroke="#c4a0ff" strokeWidth="1" strokeLinecap="round"/></svg> },
+                  { title:"Interoperable Future", desc:"Seamlessly connect, trade, and build across the Initia ecosystem.",
+                    svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><circle cx="13" cy="13" r="2.5" fill="#c4a0ff" opacity="0.9"/><circle cx="7" cy="9.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><circle cx="19" cy="9.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><circle cx="7" cy="16.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><circle cx="19" cy="16.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><path d="M8.7 10.7l2.8 1.5M17.3 10.7l-2.8 1.5M8.7 15.3l2.8-1.5M17.3 15.3l-2.8-1.5" stroke="#c4a0ff" strokeWidth="0.9" strokeLinecap="round" opacity="0.7"/></svg> },
+                ].map((item, i) => (
+                  <div key={i} style={{ display:"flex", gap:9, padding:"10px 12px", borderBottom: i<3 ? "1px solid rgba(123,47,255,0.07)" : "none", alignItems:"flex-start" }}>
+                    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", flexShrink:0 }}>
+                      {item.svg}
+                      {i < 3 && <div style={{ width:1, height:14, background:"rgba(123,47,255,0.3)", marginTop:2 }} />}
+                    </div>
+                    <div style={{ paddingTop:1 }}>
+                      <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:10, color:"#c4a0ff", marginBottom:2 }}>{item.title}</div>
+                      <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8.5, color:"#7755aa", lineHeight:1.55 }}>{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
 
-                {/* Divider */}
-                <div style={{ width: "100%", height: "0.5px", background: "rgba(123,47,255,0.2)", marginBottom: 12 }} />
-
-                {/* Tech chips */}
-                <div style={{ display: "flex", gap: 5, justifyContent: "center", flexWrap: "wrap" }}>
-                  {["Move VM", "Auto-Sign", "On-Chain", "InterwovenKit"].map(b => (
-                    <span key={b} style={{
-                      padding: "3px 8px",
-                      background: "rgba(123,47,255,0.1)",
-                      border: "1px solid rgba(123,47,255,0.22)",
-                      borderRadius: 4, fontSize: 8,
-                      color: "#9977cc",
-                      fontFamily: "'Rajdhani',sans-serif", fontWeight: 700,
-                      letterSpacing: "0.5px",
-                    }}>{b}</span>
-                  ))}
+                {/* Footer */}
+                <div style={{ padding:"10px 12px", borderTop:"1px solid rgba(123,47,255,0.1)", display:"flex", alignItems:"center", gap:8, background:"rgba(123,47,255,0.04)" }}>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#1a0a2e" stroke="rgba(123,47,255,0.5)" strokeWidth="1"/><text x="10" y="14.5" textAnchor="middle" fill="white" fontSize="11" fontWeight="900" fontFamily="Arial Black,Arial">I</text></svg>
+                  <div>
+                    <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:10, color:"#c4a0ff" }}>Initia</div>
+                    <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8, color:"#5533aa" }}>One Network. Infinite Games.</div>
+                  </div>
                 </div>
               </div>
-
-              <div style={{ fontSize: 10, color: "#5533aa", fontFamily: "'Rajdhani',sans-serif", fontWeight: 600 }}>
-                No scores yet — be the first!
+              <div style={{ fontSize:9, color:"#3a2255", fontFamily:"'Rajdhani',sans-serif", fontWeight:600, textAlign:"center", marginTop:8 }}>
+                No scores yet — play to be #1!
               </div>
             </div>
           ) : (
