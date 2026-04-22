@@ -90,7 +90,7 @@ export default function Home() {
               background: "rgba(123,47,255,0.1)",
               fontFamily: "'Rajdhani',sans-serif", fontWeight: 600,
             }}>
-              Built on Initia · Owned by Players
+              The Future of Gaming is On-Chain
             </div>
 
             <h1 style={{
@@ -158,7 +158,7 @@ export default function Home() {
             </button>
 
             <div style={{ fontSize: 9, color: "rgba(180,155,220,0.35)", letterSpacing: "0.3px", marginBottom: 10 }}>
-              Powered by Initia · Fast · Secure · Interoperable
+               Fast · Secure · Interoperable
             </div>
 
             {isConnected ? <EnableAutoSign /> : (
@@ -340,7 +340,7 @@ export default function Home() {
         </div>
 
         {/* Rows 4-8 + Initia Panel — dono hamesha dikhenge */}
-        <div style={{ flex:1, overflowY:"auto", position:"relative", zIndex:1 }}>
+        <div style={{ flex:1, overflowY:"hidden", position:"relative", zIndex:1 }}>
 
           {/* Score rows 4-8 */}
           {rest.map((row, i) => (
@@ -362,58 +362,156 @@ export default function Home() {
             </div>
           ))}
 
-          {/* ── Initia Info Panel — hamesha visible ── */}
-          <div style={{ padding:"8px 8px 0" }}>
-            <div style={{ background:"linear-gradient(180deg,rgba(20,8,40,0.95),rgba(10,4,25,0.98))", borderRadius:10, overflow:"hidden", border:"1px solid rgba(123,47,255,0.2)" }}>
+          <div style={{
+  padding:"12px",
+  background:"linear-gradient(180deg,rgba(20,8,40,0.95),rgba(10,4,25,0.98))",
+  borderRadius:12,
+  border:"1px solid rgba(123,47,255,0.25)"
+}}>
 
-              {/* Header */}
-              <div style={{ padding:"14px 12px 12px", textAlign:"center", borderBottom:"1px solid rgba(123,47,255,0.1)", background:"rgba(123,47,255,0.05)" }}>
-                <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:12, color:"#fff", textTransform:"uppercase", letterSpacing:"0.8px", lineHeight:1.5, marginBottom:7 }}>
-                  Built on Initia.<br/>
-                  <span style={{ background:"linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
-                    Powered by the Future.
-                  </span>
-                </div>
-                <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:9, color:"#7755aa", lineHeight:1.7 }}>
-                  Initia Arcade is built on Initia — the interwoven rollup network for scalable, secure on-chain gaming.
-                </div>
-              </div>
+  {/* HEADER */}
+  <div style={{
+    textAlign:"center",
+    padding:"18px 12px",
+    borderBottom:"1px solid rgba(123,47,255,0.15)"
+  }}>
+   <div style={{
+  height:228,
+  display:"flex",
+  alignItems:"center",
+  justifyContent:"center",
+  marginBottom:10
+}}>
+  <img src="/initia_logo.png" style={{
+    maxHeight:"100%",
+    width:"auto",
+    objectFit:"contain",
+    filter:"drop-shadow(0 0 10px rgba(123,47,255,0.6))"
+  }} />
+</div>
+    <div style={{
+      fontSize:16,
+      fontWeight:700,
+      color:"#fff",
+      fontFamily:"Rajdhani",
+      marginBottom:6
+    }}>
+      Built on Initia
+    </div>
 
-              {/* 4 features */}
-              {[
-                { title:"Built on Initia",       desc:"Leveraging Initia's L1 and interwoven rollups for unmatched scalability.", icon:"initia" },
-                { title:"True Ownership",         desc:"Every asset you earn or create is on-chain. You own it. Always.",
-                  svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><path d="M13 7l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L7.2 11.2l4-.6z" stroke="#c4a0ff" strokeWidth="1.1" fill="none" strokeLinejoin="round"/></svg> },
-                { title:"Play. Earn. Repeat.",    desc:"Engage in gameplay. Earn real rewards. Grow your journey.",
-                  svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><rect x="7" y="11" width="12" height="7" rx="2" stroke="#c4a0ff" strokeWidth="1.1" fill="none"/><path d="M10 14.5v-2M9 13.5h2" stroke="#c4a0ff" strokeWidth="1" strokeLinecap="round"/><circle cx="16" cy="14.5" r="0.8" fill="#c4a0ff"/><path d="M10 11V8.5M16 11V8.5" stroke="#c4a0ff" strokeWidth="1" strokeLinecap="round"/></svg> },
-                { title:"Interoperable Future",   desc:"Seamlessly connect, trade, and build across the Initia ecosystem.",
-                  svg:<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="12" fill="rgba(123,47,255,0.18)" stroke="rgba(123,47,255,0.55)" strokeWidth="1.2"/><circle cx="13" cy="13" r="2.5" fill="#c4a0ff" opacity="0.9"/><circle cx="7" cy="9.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><circle cx="19" cy="9.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><circle cx="7" cy="16.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><circle cx="19" cy="16.5" r="1.8" stroke="#c4a0ff" strokeWidth="1" fill="none"/><path d="M8.7 10.7l2.8 1.5M17.3 10.7l-2.8 1.5M8.7 15.3l2.8-1.5M17.3 15.3l-2.8-1.5" stroke="#c4a0ff" strokeWidth="0.9" strokeLinecap="round" opacity="0.7"/></svg> },
-              ].map((item, i) => (
-                <div key={i} style={{ display:"flex", gap:9, padding:"11px 12px", borderBottom:i<3?"1px solid rgba(123,47,255,0.07)":"none", alignItems:"flex-start" }}>
-                  <div style={{ display:"flex", flexDirection:"column", alignItems:"center", flexShrink:0 }}>
-                    {item.icon === "initia"
-                      ? <img src="/initia-logo.svg" alt="Initia" style={{ width:26, height:26, borderRadius:"50%" }} />
-                      : item.svg
-                    }
-                    {i<3 && <div style={{ width:1, height:14, background:"rgba(123,47,255,0.3)", marginTop:2 }} />}
-                  </div>
-                  <div style={{ paddingTop:2 }}>
-                    <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:10, color:"#c4a0ff", marginBottom:3 }}>{item.title}</div>
-                    <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8.5, color:"#7755aa", lineHeight:1.6 }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
+    <div style={{
+      fontSize:12,
+      background:"linear-gradient(90deg,#7B2FFF,#00d4ff)",
+      WebkitBackgroundClip:"text",
+      WebkitTextFillColor:"transparent",
+      fontWeight:700,
+      marginBottom:8
+    }}>
+      Powered by the Future
+    </div>
 
-              {/* Footer */}
-              <div style={{ padding:"11px 12px", borderTop:"1px solid rgba(123,47,255,0.1)", display:"flex", alignItems:"center", gap:8, background:"rgba(123,47,255,0.04)" }}>
-                <img src="/initia-logo.svg" alt="Initia" style={{ width:20, height:20, borderRadius:"50%" }} />
-                <div>
-                  <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:10, color:"#c4a0ff" }}>Initia</div>
-                  <div style={{ fontFamily:"'Rajdhani',sans-serif", fontSize:8, color:"#5533aa" }}>One Network. Infinite Games.</div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <p style={{
+      fontSize:10,
+      color:"#7755aa",
+      lineHeight:1.6
+    }}>
+      Interwoven rollup network for scalable, secure on-chain gaming.
+    </p>
+  </div>
+
+  {/* FEATURES */}
+  {[
+    {
+      title:"Built on Initia",
+      desc:"High-performance L1 + rollups",
+      icon:"/initia_logo.png"
+    },
+    {
+      title:"True Ownership",
+      desc:"Your assets live on-chain",
+      icon:"⭐"
+    },
+    {
+      title:"Play & Earn",
+      desc:"Real rewards from gameplay",
+      icon:"🎮"
+    },
+    {
+      title:"Interoperable",
+      desc:"Connect across ecosystem",
+      icon:"🔗"
+    }
+  ].map((item, i) => (
+    <div key={i} style={{
+      display:"flex",
+      alignItems:"center",
+      gap:12,
+      padding:"14px 10px",
+      borderBottom: i < 3 ? "1px solid rgba(123,47,255,0.1)" : "none"
+    }}>
+
+      {/* ICON */}
+      <div style={{
+        width:36,
+        height:36,
+        borderRadius:"50%",
+        background:"rgba(123,47,255,0.15)",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        fontSize:16,
+        border:"1px solid rgba(123,47,255,0.3)"
+      }}>
+        {typeof item.icon === "string" && item.icon.startsWith("/")
+          ? <img src={item.icon} style={{ width:20 }} />
+          : item.icon
+        }
+      </div>
+
+      {/* TEXT */}
+      <div>
+        <div style={{
+          fontSize:12,
+          fontWeight:700,
+          color:"#c4a0ff",
+          marginBottom:3
+        }}>
+          {item.title}
+        </div>
+
+        <div style={{
+          fontSize:10,
+          color:"#7755aa"
+        }}>
+          {item.desc}
+        </div>
+      </div>
+    </div>
+  ))}
+
+  {/* FOOTER */}
+  <div style={{
+    display:"flex",
+    alignItems:"center",
+    gap:10,
+    padding:"14px 10px",
+    marginTop:6,
+    background:"rgba(123,47,255,0.05)",
+    borderRadius:8
+  }}>
+    <img src="/initia_logo.png" style={{ width:26 }} />
+
+    <div>
+      <div style={{ fontSize:12, color:"#c4a0ff", fontWeight:700 }}>
+        Initia Network
+      </div>
+      <div style={{ fontSize:9, color:"#5533aa" }}>
+        One Network. Infinite Games.
+      </div>
+    </div>
+  </div>
+
+</div>
         </div>
 
 

@@ -230,12 +230,17 @@ export default function Leaderboard() {
             </div>
 
             {/* ── TABLE ── */}
-            <div style={{
-              border:"1px solid rgba(123,47,255,0.15)", borderRadius:12, overflow:"hidden",
-              background:"rgba(6,5,12,0.82)", backdropFilter:"blur(20px)",
-              WebkitBackdropFilter:"blur(20px)",
-            }}>
-              {/* Table header */}
+<div style={{
+  border:"1px solid rgba(123,47,255,0.15)",
+  borderRadius:12,
+  overflow:"hidden",
+  background:"rgba(6,5,12,0.82)",
+  backdropFilter:"blur(20px)",
+
+  height:"650px",           // 🔥 FIX HEIGHT
+  display:"flex",
+  flexDirection:"column"
+}}>                                     {/* Table header */}
               <div style={{ padding:"14px 20px", borderBottom:"1px solid rgba(123,47,255,0.1)", display:"flex", justifyContent:"space-between", alignItems:"center", background:"rgba(123,47,255,0.06)" }}>
                 <span style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:13, color:"#fff", letterSpacing:"0.3px" }}>
                   {activeTab === "global" ? "Top Players" : selectedGame === "all" ? "All Scores" : `Game #${selectedGame}`}

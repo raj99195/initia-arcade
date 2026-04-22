@@ -41,8 +41,14 @@ export default function GameLibrary() {
       </div>
 
       {/* ── PAGE CONTENT ── */}
-      <div style={{ position: "relative", zIndex: 1, padding: "28px 36px" }}>
-
+      <div style={{
+  position: "relative",
+  zIndex: 1,
+  padding: "28px 36px",
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "calc(100vh - 54px)"
+}}>
         {/* HEADER */}
         <div style={{ marginBottom: 20 }}>
           <h1 style={{
@@ -123,32 +129,63 @@ export default function GameLibrary() {
         )}
 
         {/* BOTTOM INFO */}
-        <div style={{
-          marginTop: 40,
-          padding: 20,
-          borderRadius: 14,
-          background: "rgba(6,5,12,0.75)",
-          border: "1px solid rgba(123,47,255,0.15)",
-          display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
-          gap: 20,
-          textAlign: "center",
-          backdropFilter: "blur(20px)"
-        }}>
-          {[
-            ["🛡️","On-Chain Verified","All games are fully on-chain"],
-            ["⚡","Instant Play","No downloads required"],
-            ["🏆","Fair Rewards","Earn real rewards"],
-            ["🔒","Secure","Built on blockchain"]
-          ].map(([icon,title,desc]) => (
-            <div key={title}>
-              <div style={{ fontSize: 28 }}>{icon}</div>
-              <div style={{ fontWeight: 700, marginTop: 6, color:"#fff" }}>{title}</div>
-              <div style={{ fontSize: 12, color: "#aaa" }}>{desc}</div>
-            </div>
-          ))}
-        </div>
+     <div style={{
+  marginTop:"auto",
+  width:"100%",
+  maxWidth:"900px",
+  alignSelf:"center",
+  padding:"14px 18px",
+  borderRadius:12,
+  background:"rgba(10,8,20,0.85)",
+  border:"1px solid rgba(123,47,255,0.2)",
+  display:"grid",
+  gridTemplateColumns:"repeat(4,1fr)",
+  gap:12,
+  backdropFilter:"blur(14px)"
+}}>
+  {[
+    ["🛡️","On-Chain","Fully verified"],
+    ["⚡","Instant Play","No downloads"],
+    ["🏆","Rewards","Earn real"],
+    ["🔒","Secure","Blockchain"]
+  ].map(([icon,title,desc]) => (
+    <div key={title} style={{
+      display:"flex",
+      alignItems:"center",
+      gap:10
+    }}>
+      <div style={{
+        width:32,
+        height:32,
+        borderRadius:"50%",
+        background:"rgba(123,47,255,0.15)",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        fontSize:16,
+        border:"1px solid rgba(123,47,255,0.3)"
+      }}>
+        {icon}
+      </div>
 
+      <div>
+        <div style={{
+          fontSize:11,
+          fontWeight:700,
+          color:"#c4a0ff"
+        }}>
+          {title}
+        </div>
+        <div style={{
+          fontSize:9,
+          color:"#777"
+        }}>
+          {desc}
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
       </div>
     </div>
   );

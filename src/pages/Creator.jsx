@@ -205,7 +205,12 @@ export default function Creator() {
     try { setMyGames(await getGamesByCreator(initiaAddress)); } catch(err) { console.error(err); }
     finally { setGamesLoading(false); }
   };
-
+ // 👇 NEW (ye add karna hai)
+useEffect(() => {
+  if (initiaAddress) {
+    fetchMyGames();
+  }
+}, [initiaAddress]);
   useEffect(() => { if (initiaAddress && (creatorStatus === "approved" || creatorStatus === "pending")) fetchMyGames(); }, [initiaAddress, creatorStatus]);
 
   const fetchAndInitArcade = async () => {
