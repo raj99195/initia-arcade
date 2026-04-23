@@ -153,7 +153,7 @@ export default function Creator() {
   const [timeLeft, setTimeLeft] = useState("");
   const [form, setForm] = useState({ name: "", description: "", iframeUrl: "", thumbnailUrl: "", category: "Action", rewardRate: "50" });
 
-  const categories = ["Action", "Runner", "Strategy", "Puzzle", "Casual", "Shooter", "Adventure","Simulation / Idle Tycoon"];
+  const categories = ["Action", "Runner", "Strategy", "Puzzle", "Casual", "Shooter", "Adventure","Simulation / Idle Tycoon","Music / Rhythm"];
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const validateUrl = (url) => { try { new URL(url); return true; } catch { return false; } };
 
