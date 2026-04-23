@@ -34,26 +34,41 @@ export default function GameCard({ game }) {
         if (btn) { btn.style.background = "linear-gradient(90deg,#7B2FFF,#5a1fd4)"; btn.style.color = "#fff"; }
       }}
     >
-      {/* Thumbnail */}
-      <div style={{
-        height: 170,
-        background: game.bg || "#0d0a1a",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        position: "relative", fontSize: 32, overflow: "hidden",
-        flexShrink: 0,
-      }}>
-        {game.thumbnailUrl ? (
-          <img
-            src={game.thumbnailUrl}
-            alt={game.name}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            onError={e => { e.target.style.display = "none"; }}
-          />
-        ) : (
-          <span style={{ fontSize: 44, filter: "drop-shadow(0 0 12px rgba(123,47,255,0.4))" }}>
-            {game.emoji || "🎮"}
-          </span>
-        )}
+ {/* Thumbnail */}
+<div style={{
+  width: "100%",
+  aspectRatio: "16/9",
+  background: game.bg || "#0d0a1a",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "relative",
+  fontSize: 32,
+  overflow: "hidden",
+  flexShrink: 0,
+}}>
+  {game.thumbnailUrl ? (
+    <img
+      src={game.thumbnailUrl}
+      alt={game.name}
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        objectPosition: "center"
+      }}
+      onError={(e) => {
+        e.target.src = "/fallback.png"; // optional
+      }}
+    />
+  ) : (
+    <span style={{
+      fontSize: 44,
+      filter: "drop-shadow(0 0 12px rgba(123,47,255,0.4))"
+    }}>
+      {game.emoji || "🎮"}
+    </span>
+  )}
 
         {/* Bottom gradient overlay */}
         <div style={{
