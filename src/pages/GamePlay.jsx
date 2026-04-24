@@ -131,11 +131,11 @@ export default function GamePlay() {
   const autoSignOn    = autoSign?.isEnabledByChain?.[CHAIN_ID];
 
   return (
-    <div style={{ minHeight:"calc(100vh - 54px)", background:P.bg, padding:"24px 36px" }}>
+    <div style={{ minHeight:"calc(100vh - 54px)", background:P.bg, padding:"16px 36px 16px" }}>
       <style>{`@keyframes lbPulse{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
 
       {/* Header */}
-      <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:20 }}>
+      <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:12 }}>
         <button onClick={() => navigate("/games")} style={{
           background:"rgba(123,47,255,0.06)", border:`1px solid ${P.b}`,
           borderRadius:7, color:"#7755aa", fontSize:11, padding:"7px 14px", cursor:"pointer",
@@ -161,11 +161,11 @@ export default function GamePlay() {
       <div style={{ display:"grid", gridTemplateColumns:"1fr 270px", gap:16 }}>
 
         {/* Game iframe */}
-        <div style={{ background:P.s1, border:`1px solid ${P.b2}`, borderRadius:12, overflow:"hidden" }}>
+        <div style={{ background:P.s1, border:`1px solid ${P.b2}`, borderRadius:12, overflow:"hidden", display:"flex", flexDirection:"column" }}>
           {game.iframeUrl && !game.iframeUrl.includes("your-unity-game") ? (
-            <iframe ref={iframeRef} src={game.iframeUrl} style={{ width:"100%", height:560, border:"none", display:"block" }} allow="fullscreen" title={game.name} />
+            <iframe ref={iframeRef} src={game.iframeUrl} style={{ width:"100%", height:"calc(100vh - 54px - 120px)", minHeight:480, border:"none", display:"block" }} allow="fullscreen" title={game.name} />
           ) : (
-            <div style={{ height:560, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:14 }}>
+            <div style={{ height:"calc(100vh - 54px - 120px)", minHeight:480, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:14 }}>
               <div style={{ fontSize:56, filter:"drop-shadow(0 0 16px rgba(123,47,255,0.5))" }}>{game.emoji||"🎮"}</div>
               <div style={{ fontFamily:P.raj, fontWeight:700, fontSize:14, color:"#7755aa" }}>Game coming soon</div>
               <div style={{ fontFamily:P.raj, fontSize:11, color:"#3a2a5a" }}>Unity WebGL build not yet linked</div>
