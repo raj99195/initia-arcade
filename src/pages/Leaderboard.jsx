@@ -148,12 +148,13 @@ export default function Leaderboard() {
   };
 
   return (
-    <div style={{ minHeight: "calc(100vh - 54px)", background: "transparent", position: "relative" }}>
+    <div style={{ minHeight: "calc(100vh - 54px)", background: "transparent", position: "relative", overflow: "hidden" }}>
       <style>{`
         @keyframes lbPulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
         @keyframes floatUp  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
         .lb-row:hover { background: rgba(123,47,255,0.1) !important; }
         .tab-btn:hover { color: #c4a0ff !important; }
+        .lb-scroll::-webkit-scrollbar { display: none; }
       `}</style>
 
       {/* ── FULL PAGE FIXED BG ── */}
@@ -175,7 +176,7 @@ export default function Leaderboard() {
             <span style={{ width:5, height:5, borderRadius:"50%", background:"#00FF88", animation:"lbPulse 1.5s ease-in-out infinite" }} />
             Live On-Chain Scores
           </div>
-          <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
             <h1 style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:48, letterSpacing:"-0.5px", textTransform:"uppercase", lineHeight:1, color:"#fff" }}>
               Global{" "}
               <span style={{ background:"linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>
@@ -199,10 +200,10 @@ export default function Leaderboard() {
         </div>
 
         {/* ── MAIN CONTENT ── */}
-        <div style={{ padding:"0 36px 36px", display:"grid", gridTemplateColumns:"1fr 300px", gap:20 }}>
+        <div style={{ padding:"0 36px 36px", display:"grid", gridTemplateColumns:"minmax(800px, 1fr) 380px", gap:200 }}>
 
           {/* LEFT */}
-          <div>
+          <div style={{ minWidth: 0 }}>
             {/* Tabs */}
             <div style={{ display:"flex", alignItems:"center", gap:0, marginBottom:20, borderBottom:"1px solid rgba(123,47,255,0.15)" }}>
               {["global", "by-game"].map(tab => (
@@ -217,7 +218,7 @@ export default function Leaderboard() {
               ))}
               {activeTab === "by-game" && (
                 <select value={selectedGame} onChange={e => setSelectedGame(e.target.value)} style={{
-                  marginLeft:"auto", marginBottom:4,
+                  marginLeft:50, marginBottom:0,
                   background:"rgba(123,47,255,0.15)", border:"1px solid rgba(123,47,255,0.2)",
                   borderRadius:6, color:"#a67fff", fontSize:11, padding:"5px 10px",
                   cursor:"pointer", fontFamily:"'Rajdhani',sans-serif", fontWeight:600,
@@ -236,8 +237,6 @@ export default function Leaderboard() {
   overflow:"hidden",
   background:"rgba(6,5,12,0.82)",
   backdropFilter:"blur(20px)",
-
-  height:"650px",           // 🔥 FIX HEIGHT
   display:"flex",
   flexDirection:"column"
 }}>                                     {/* Table header */}
@@ -252,9 +251,9 @@ export default function Leaderboard() {
               </div>
 
               {/* Col headers */}
-              <div style={{ display:"grid", gridTemplateColumns:"64px 1fr 180px 130px", padding:"10px 20px", borderBottom:"1px solid rgba(123,47,255,0.08)", background:"rgba(0,0,0,0.2)" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"52px 160px 1fr 130px", padding:"10px 20px", borderBottom:"1px solid rgba(123,47,255,0.08)", background:"rgba(0,0,0,0.2)" }}>
                 {["Rank", "Player", activeTab==="global" ? "Best Game" : "Game", "Score"].map((h, i) => (
-                  <div key={i} style={{ fontSize:9, color:"#5533aa", textTransform:"uppercase", letterSpacing:"1.2px", textAlign: i>=3 ? "right" : "left", fontFamily:"'Rajdhani',sans-serif", fontWeight:700 }}>{h}</div>
+                  <div key={i} style={{ fontSize:9, color:"#5533aa", textTransform:"uppercase", letterSpacing:"1.2px", textAlign: i===2 ? "center" : i===3 ? "right" : "left", fontFamily:"'Rajdhani',sans-serif", fontWeight:700 }}>{h}</div>
                 ))}
               </div>
 
@@ -267,13 +266,19 @@ export default function Leaderboard() {
                   <button onClick={() => navigate("/games")} style={{ marginTop:12, padding:"8px 18px", background:"linear-gradient(135deg,#7B2FFF,#5a1fd4)", border:"none", borderRadius:6, color:"#fff", fontSize:11, cursor:"pointer", fontFamily:"'Rajdhani',sans-serif", fontWeight:700 }}>Play a Game →</button>
                 </div>
               ) : (
-                displayData.map((row, idx) => {
+                <div className="lb-scroll" style={{
+                  overflowY:"auto", maxHeight:520,
+                  scrollbarWidth:"none",
+                  msOverflowStyle:"none",
+                }}>
+                {displayData.map((row, idx) => {
                   const isMe = row.player === myHex;
                   const rStyle = rankRowStyle(row.rank, isMe);
+                  const copyAddr = () => { if(row.player) navigator.clipboard.writeText(row.player); };
                   return (
                     <div key={idx} className="lb-row" style={{
-                      display:"grid", gridTemplateColumns:"64px 1fr 180px 130px",
-                      padding:"13px 20px",
+                      display:"grid", gridTemplateColumns:"52px 160px 1fr 130px",
+                      padding:"12px 20px",
                       borderBottom:"1px solid rgba(123,47,255,0.05)",
                       transition:"background 0.15s",
                       alignItems:"center",
@@ -285,31 +290,48 @@ export default function Leaderboard() {
                       </div>
 
                       {/* Player */}
-                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                        <Avatar player={row.player} size={34} />
+                      <div
+                        onClick={copyAddr}
+                        title="Click to copy address"
+                        style={{ display:"flex", alignItems:"center", gap:8, cursor:"pointer" }}
+                      >
+                        <div style={{
+                          width: 7, height: 7, borderRadius:"50%", flexShrink:0,
+                          background: isMe ? "#00FF88" : row.rank <= 3 ? scoreColor(row.rank) : "rgba(123,47,255,0.5)",
+                          boxShadow: isMe ? "0 0 6px #00FF88" : row.rank <= 3 ? `0 0 6px ${scoreColor(row.rank)}` : "none",
+                        }}/>
                         <div>
-                          <div style={{ fontFamily:"'Orbitron',sans-serif", fontSize:9, color: isMe ? "#c4a0ff" : row.rank <= 3 ? scoreColor(row.rank) : "#8866bb" }}>
+                          <div style={{
+                            fontFamily:"'Orbitron',sans-serif", fontSize:10,
+                            color: isMe ? "#c4a0ff" : row.rank <= 3 ? scoreColor(row.rank) : "#9977cc",
+                            letterSpacing:"0.3px",
+                          }}>
                             {shortAddr(row.player)}
                           </div>
-                          {isMe && <div style={{ fontSize:9, color:"#7B2FFF", fontFamily:"'Rajdhani',sans-serif", fontWeight:700, marginTop:2 }}>← You</div>}
+                          {isMe && <div style={{ fontSize:9, color:"#00FF88", fontFamily:"'Rajdhani',sans-serif", fontWeight:700, marginTop:1 }}>← You</div>}
                         </div>
+                        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" style={{ opacity:0.55, flexShrink:0 }}>
+                          <rect x="3" y="3" width="6" height="6" rx="1" stroke="#a67fff" strokeWidth="1"/>
+                          <path d="M2 7V2h5" stroke="#a67fff" strokeWidth="1" strokeLinecap="round"/>
+                        </svg>
                       </div>
 
-                      {/* Game */}
-                      <div style={{ fontSize:12, color:"#7755aa", fontFamily:"'Rajdhani',sans-serif", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                      {/* Game — center */}
+                      <div style={{ fontSize:11, color:"#8866bb", fontFamily:"'Rajdhani',sans-serif", fontWeight:600, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textAlign:"center" }}>
                         {activeTab==="global" ? (row.bestGame||"—") : (row.gameName||`Game #${row.gameId}`)}
                       </div>
 
-                      {/* Score */}
-                      <div style={{ display:"flex", alignItems:"center", justifyContent:"flex-end", gap:6 }}>
-                        <ArcadeCoin size={15} />
-                        <span style={{ fontFamily:"'Orbitron',sans-serif", fontWeight:700, fontSize:14, color: scoreColor(row.rank) }}>
+                      {/* Score — right */}
+                      <div style={{ display:"flex", alignItems:"center", justifyContent:"flex-end", gap:5 }}>
+                        <ArcadeCoin size={14} />
+                        <span style={{ fontFamily:"'Orbitron',sans-serif", fontWeight:700, fontSize:13, color: scoreColor(row.rank) }}>
                           {fmtScore(activeTab==="global" ? row.bestScore : row.score)}
                         </span>
                       </div>
                     </div>
                   );
-                })
+                })}
+                </div>
               )}
             </div>
           </div>
@@ -320,11 +342,11 @@ export default function Leaderboard() {
             {/* Your Rank */}
             <div style={{
               background:"rgba(6,5,12,0.82)", border:"1px solid rgba(123,47,255,0.12)",
-              borderRadius:12, padding:20, position:"relative", overflow:"hidden",
+              borderRadius:12, padding:20,marginTop: 55  ,position:"relative", overflow:"hidden",
               backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)",
             }}>
               <div style={{ position:"absolute", top:-20, right:-20, width:100, height:100, background:"radial-gradient(circle,rgba(123,47,255,0.12) 0%,transparent 70%)", borderRadius:"50%", pointerEvents:"none" }} />
-              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:14 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:65 }}>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M7 1l1.5 3 3.5.5-2.5 2.5.6 3.5L7 9 3.9 10.5l.6-3.5L2 4.5l3.5-.5z" fill="#7B2FFF" opacity="0.8"/>
                 </svg>

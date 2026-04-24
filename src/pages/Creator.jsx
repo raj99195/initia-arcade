@@ -368,11 +368,36 @@ useEffect(() => {
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88", animation: "lbPulse 1.5s ease-in-out infinite" }} />
             Creator Hub · Initia-Arcade
           </div>
-          <h1 style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 36, textTransform: "uppercase", letterSpacing: "-0.3px", color: "#fff", marginBottom: 6 }}>
-            Creator{" "}
-            <span style={{ background: "linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Dashboard</span>
-          </h1>
-          <p style={{ color: "#5533aa", fontSize: 12, fontFamily: P.raj }}>Manage your published games, track earnings, and publish new games.</p>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
+            <div>
+              <h1 style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 36, textTransform: "uppercase", letterSpacing: "-0.3px", color: "#fff", marginBottom: 6 }}>
+                Creator{" "}
+                <span style={{ background: "linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Dashboard</span>
+              </h1>
+              <p style={{ color: "#5533aa", fontSize: 12, fontFamily: P.raj }}>Manage your published games, track earnings, and publish new games.</p>
+            </div>
+            <a href="/sdk" target="_blank" rel="noreferrer" style={{
+              display: "inline-flex", alignItems: "center", gap: 7,
+              padding: "10px 18px",
+              background: "rgba(0,212,255,0.07)",
+              border: "1px solid rgba(0,212,255,0.25)",
+              borderRadius: 8,
+              color: "#00d4ff",
+              fontSize: 11, fontWeight: 700,
+              textDecoration: "none",
+              fontFamily: P.raj,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              flexShrink: 0,
+              marginTop: 4,
+              transition: "all 0.18s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background="rgba(0,212,255,0.13)"; e.currentTarget.style.borderColor="rgba(0,212,255,0.45)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background="rgba(0,212,255,0.07)"; e.currentTarget.style.borderColor="rgba(0,212,255,0.25)"; }}
+            >
+              📖 SDK Docs
+            </a>
+          </div>
         </div>
 
         {/* Profile card */}
@@ -451,11 +476,7 @@ useEffect(() => {
                         </div>
                         <div style={{ padding: "10px 12px" }}>
                           <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 13, color: "#d4b8ff", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{game.name}</div>
-                          <div style={{ fontSize: 9, color: "#5533aa", marginBottom: 8, fontFamily: P.raj }}>Game #{game.gameId} · {game.category}</div>
-                          <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <span style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj }}>{(game.plays||0).toLocaleString()} plays</span>
-                            <span style={{ fontSize: 9, color: "#a67fff", fontFamily: P.orb, fontWeight: 600 }}>{game.earned||0} ARCADE</span>
-                          </div>
+                          <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj }}>Game #{game.gameId} · {game.category}</div>
                         </div>
                       </div>
                     );
@@ -484,18 +505,63 @@ useEffect(() => {
         {/* ── EARNINGS TAB ── */}
         {activeTab === "earnings" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
-              {[
-                { label: "Total Earned", value: totalEarned.toLocaleString() + " ARCADE", color: "#7B2FFF" },
-                { label: "Claimable Now", value: totalEarned.toLocaleString() + " ARCADE", color: "#00FF88" },
-                { label: "Games Published", value: myGames.length, color: "#00d4ff" },
-              ].map(s => (
-                <div key={s.label} style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: "16px 18px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, background: `radial-gradient(circle, ${s.color}18 0%, transparent 70%)`, borderRadius: "50%", pointerEvents: "none" }} />
-                  <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 22, color: s.color, marginBottom: 4 }}>{s.value}</div>
-                  <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>{s.label}</div>
+
+            {/* Top row — Games Published + Token Utility */}
+            <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: 14 }}>
+
+              {/* Games Published */}
+              <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: "16px 18px", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, background: "radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+                <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 28, color: "#00d4ff", marginBottom: 4 }}>{myGames.length}</div>
+                <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Games Published</div>
+              </div>
+
+              {/* Token Utility */}
+              <div style={{
+                background: "linear-gradient(135deg,rgba(123,47,255,0.1),rgba(0,212,255,0.05))",
+                border: `1px solid rgba(123,47,255,0.25)`,
+                borderRadius: 10, overflow: "hidden",
+                display: "grid", gridTemplateColumns: "1fr 1fr",
+              }}>
+                {/* Left — Live */}
+                <div style={{ padding: "14px 16px", borderRight: `1px solid ${P.b}` }}>
+                  <div style={{ fontSize: 8, color: "#00FF88", fontFamily: P.raj, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10, display: "flex", alignItems: "center", gap: 5 }}>
+                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88" }} />
+                    Live Now
+                  </div>
+                  {[
+                    { icon: "🎮", label: "Play & Earn",     desc: "80% to players" },
+                    { icon: "🏆", label: "Creator Revenue", desc: "20% per play" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                      <span style={{ fontSize: 14 }}>{item.icon}</span>
+                      <div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#a67fff", fontFamily: P.raj }}>{item.label}</div>
+                        <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj }}>{item.desc}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+
+                {/* Right — Coming Soon */}
+                <div style={{ padding: "14px 16px" }}>
+                  <div style={{ fontSize: 8, color: "#FFB800", fontFamily: P.raj, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10 }}>
+                    🔮 Coming Soon
+                  </div>
+                  {[
+                    { icon: "🛒", label: "In-Game Shop"      },
+                    { icon: "🗳️", label: "Governance"        },
+                    { icon: "💎", label: "Staking"           },
+                    { icon: "🏅", label: "NFT Achievements"  },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
+                      <span style={{ fontSize: 12 }}>{item.icon}</span>
+                      <span style={{ fontSize: 10, color: "#7755aa", fontFamily: P.raj, fontWeight: 600 }}>{item.label}</span>
+                      <span style={{ marginLeft: "auto", fontSize: 7, color: "#FFB800", fontFamily: P.raj, fontWeight: 700, background: "rgba(255,184,0,0.08)", padding: "2px 6px", borderRadius: 3, border: "1px solid rgba(255,184,0,0.18)", flexShrink: 0 }}>SOON</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* ARCADE Balance */}
@@ -531,23 +597,6 @@ useEffect(() => {
                   </div>
                 ))}
               </div>
-              {myGames.length > 0 && (
-                <div>
-                  <div style={{ fontSize: 9, color: "#5533aa", marginBottom: 10, textTransform: "uppercase", letterSpacing: "1px", fontFamily: P.raj, fontWeight: 700 }}>Per Game Breakdown</div>
-                  {myGames.map(game => (
-                    <div key={game.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${P.b}` }}>
-                      <div>
-                        <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 13, color: "#c4a0ff" }}>{game.name}</div>
-                        <div style={{ fontSize: 10, color: "#5533aa", marginTop: 2, fontFamily: P.raj }}>Game #{game.gameId} · {game.plays||0} plays · {game.category}</div>
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 14, color: "#a67fff" }}>{game.earned||0} ARCADE</div>
-                        <div style={{ fontSize: 9, color: "#5533aa", marginTop: 2, fontFamily: P.raj }}>earned</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Claim Revenue */}

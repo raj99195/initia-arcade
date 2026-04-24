@@ -207,7 +207,7 @@ export default function Home() {
         {/* FEATURED GAMES */}
         {featured.length > 0 && (
           <div
-            style={{ position: "relative", zIndex: 2, flexShrink: 0, padding: "8px 36px 10px", borderTop: "1px solid rgba(123,47,255,0.1)", background: "transparent" }}
+            style={{ position: "relative", zIndex: 2, flexShrink: 0, padding: "8px 36px 10px", marginTop: "-60px", borderTop: "1px solid rgba(123,47,255,0.1)", background: "transparent" }}
             onWheel={e => { e.preventDefault(); if (e.deltaY > 0) goTo(page + 1); else goTo(page - 1); }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
@@ -361,6 +361,69 @@ export default function Home() {
               </div>
             </div>
           ))}
+
+          {/* ── ARCADE Token Utility ── */}
+          <div style={{
+            margin:"10px 12px",
+            background:"linear-gradient(135deg,rgba(123,47,255,0.1),rgba(0,212,255,0.05))",
+            border:"1px solid rgba(123,47,255,0.25)",
+            borderRadius:12,
+            overflow:"hidden",
+          }}>
+            {/* Header */}
+            <div style={{ padding:"12px 14px 10px", borderBottom:"1px solid rgba(123,47,255,0.12)", display:"flex", alignItems:"center", gap:8 }}>
+              <img src="/Arcade-token-logo.png" alt="ARCADE"
+                style={{ width:22, height:22, borderRadius:"50%", objectFit:"cover", flexShrink:0 }}
+                onError={e => e.target.style.display="none"}
+              />
+              <div>
+                <div style={{ fontFamily:"'Rajdhani',sans-serif", fontWeight:700, fontSize:11, color:"#c4a0ff", textTransform:"uppercase", letterSpacing:"1px" }}>ARCADE Token</div>
+                <div style={{ fontSize:8, color:"#5533aa", fontFamily:"'Rajdhani',sans-serif" }}>Utility · Governance · Rewards</div>
+              </div>
+            </div>
+
+            {/* Live use */}
+            <div style={{ padding:"10px 14px 6px" }}>
+              <div style={{ fontSize:8, color:"#00FF88", fontFamily:"'Rajdhani',sans-serif", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:6, display:"flex", alignItems:"center", gap:5 }}>
+                <span style={{ width:5, height:5, borderRadius:"50%", background:"#00FF88", animation:"lbPulse 1.5s ease-in-out infinite" }} />
+                Live Now
+              </div>
+              {[
+                { icon:"🎮", label:"Play & Earn",      desc:"80% rewards to players" },
+                { icon:"🏆", label:"Creator Revenue",  desc:"20% split to game creators" },
+              ].map((item,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:8, padding:"6px 0", borderBottom:"1px solid rgba(123,47,255,0.07)" }}>
+                  <span style={{ fontSize:13, flexShrink:0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontSize:10, fontWeight:700, color:"#a67fff", fontFamily:"'Rajdhani',sans-serif" }}>{item.label}</div>
+                    <div style={{ fontSize:9, color:"#5533aa", fontFamily:"'Rajdhani',sans-serif" }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Coming soon */}
+            <div style={{ padding:"8px 14px 12px" }}>
+              <div style={{ fontSize:8, color:"#FFB800", fontFamily:"'Rajdhani',sans-serif", fontWeight:700, textTransform:"uppercase", letterSpacing:"1px", marginBottom:6 }}>
+                🔮 Coming Soon
+              </div>
+              {[
+                { icon:"🛒", label:"In-Game Shop",     desc:"Spend tokens on items & skins" },
+                { icon:"🗳️", label:"Governance",       desc:"Vote on platform decisions" },
+                { icon:"💎", label:"Staking",          desc:"Lock tokens, earn yield" },
+                { icon:"🏅", label:"NFT Achievements", desc:"Mint badges on Initia chain" },
+              ].map((item,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:8, padding:"5px 0" }}>
+                  <span style={{ fontSize:12, flexShrink:0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontSize:10, fontWeight:700, color:"#7755aa", fontFamily:"'Rajdhani',sans-serif" }}>{item.label}</div>
+                    <div style={{ fontSize:8, color:"#3a2a5a", fontFamily:"'Rajdhani',sans-serif" }}>{item.desc}</div>
+                  </div>
+                  <span style={{ marginLeft:"auto", fontSize:7, color:"#FFB800", fontFamily:"'Rajdhani',sans-serif", fontWeight:700, background:"rgba(255,184,0,0.08)", padding:"2px 6px", borderRadius:3, border:"1px solid rgba(255,184,0,0.18)", flexShrink:0 }}>SOON</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <div style={{
   padding:"12px",
