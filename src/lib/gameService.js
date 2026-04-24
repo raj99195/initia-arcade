@@ -33,19 +33,18 @@ export async function saveGame({
   creator, txHash
 }) {
   const gameRef = doc(db, "games", String(gameId));
+  const existing = await getDoc(gameRef);
+  if (existing.exists()) {
+    throw new Error(`Game ID ${gameId} already exists. Try again.`);
+  }
   await setDoc(gameRef, {
-    gameId,
-    name,
-    description,
-    iframeUrl,
+    gameId, name, description, iframeUrl,
     thumbnailUrl: thumbnailUrl || "",
     category,
     rewardRate: parseInt(rewardRate) || 50,
-    creator,
-    txHash,
+    creator, txHash,
     status: "pending",
-    plays: 0,
-    earned: 0,
+    plays: 0, earned: 0,
     createdAt: serverTimestamp(),
   });
 }
@@ -105,7 +104,25 @@ export async function getCreatorStatus(address) {
 
   return { id: snap.id, ...data };
 }
-
+export async function getNextGameId() {
+  try {
+    const res = await fetch(
+      "https://rest.testnet.initia.xyz/initia/move/v1/accounts/0xd1aa08d2de31ca1af55682f4185547f92332bee/resources"
+    );
+    const data = await res.json();
+    const platform = data.resources?.find(r =>
+      r.struct_tag?.includes("::platform::Platform")
+    );
+    if (platform) {
+      const parsed = JSON.parse(platform.move_resource);
+      return parseInt(parsed.data.next_game_id);
+    }
+  } catch (e) {
+    console.error("Chain ID fetch failed:", e);
+  }
+  const snap = await getDocs(collection(db, "games"));
+  return snap.size + 1;
+}
 // Creator ke games fetch karo
 export async function getGamesByCreator(creatorAddress) {
   const q = query(
@@ -160,6 +177,23 @@ export async function rejectGameInFirebase(gameId) {
 
 // Total games count
 export async function getTotalGamesCount() {
+  try {
+    const res = await fetch(
+      "https://rest.testnet.initia.xyz/initia/move/v1/accounts/0xd1aa08d2de31ca1af55682f4185547f92332bee/resources"
+    );
+    const data = await res.json();
+    const platform = data.resources?.find(r =>
+      r.struct_tag?.includes("::platform::Platform")
+    );
+    if (platform) {
+      const parsed = JSON.parse(platform.move_resource);
+      // next_game_id - 1 nahi, seedha next_game_id return karo
+      // Creator.jsx mein +1 hota hai toh yahan -1 karo
+      return parseInt(parsed.data.next_game_id) - 1;
+    }
+  } catch (e) {
+    console.error("Chain count failed:", e);
+  }
   const snap = await getDocs(collection(db, "games"));
   return snap.size;
 }

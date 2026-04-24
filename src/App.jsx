@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/publish" element={<Creator />} />
         <Route path="/sdk" element={<SDK />} />
-      </Routes>
+           </Routes>
     </div>
   );
 }
