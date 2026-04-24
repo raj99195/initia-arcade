@@ -46,14 +46,16 @@ export default function Navbar() {
           onClick={() => setDdOpen(p => !p)}
           style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer", userSelect: "none" }}
         >
-          <div style={{
-            width: 30, height: 30, borderRadius: "50%",
-            background: "linear-gradient(135deg,#7B2FFF,#00d4ff)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 11, fontWeight: 700, color: "#fff",
-            fontFamily: "'Orbitron','Rajdhani',sans-serif",
-            boxShadow: "0 0 12px rgba(123,47,255,0.4)",
-          }}>IA</div>
+         <img
+  src="/IA-logo.png"
+  alt="IA Logo"
+  style={{
+    width: 32,
+    height: 32,
+    objectFit: "contain",
+    filter: "drop-shadow(0 0 10px rgba(123,47,255,0.8))"
+  }}
+/>
           <span style={{ fontSize: 14, fontWeight: 700, color: "#fff", fontFamily: "'Rajdhani',sans-serif", letterSpacing: "0.5px" }}>
             InitiaArcade
           </span>

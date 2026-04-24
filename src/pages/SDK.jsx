@@ -518,7 +518,117 @@ void OnGameOver()
               </div>
             </Section>
 
-            {/* Step 2 — ArcadeBridge */}
+            {/* Step 1.5 — WebGL Template */}
+            <Section style={{ border: `1px solid rgba(255,184,0,0.25)` }}>
+              <SectionTitle sub="Use the InitiaArcade custom WebGL template — includes themed loading screen, arcade-sdk.js, and proper canvas sizing out of the box.">
+                Step 1.5 — Install InitiaArcade WebGL Template
+              </SectionTitle>
+
+              {/* Download card */}
+              <div style={{
+                background: C.surface2,
+                border: `1px solid rgba(255,184,0,0.2)`,
+                borderRadius: 14, padding: "20px 26px",
+                display: "flex", alignItems: "center",
+                justifyContent: "space-between", gap: 20, marginBottom: 16,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                    background: "rgba(255,184,0,0.08)", border: "1px solid rgba(255,184,0,0.2)",
+                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
+                  }}>🎨</div>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: C.gold, fontFamily: C.mono }}>InitiaArcade WebGL Template</span>
+                      <Badge color={C.gold}>Unity Template</Badge>
+                      <Badge color={C.purple}>Assets/WebGLTemplates/</Badge>
+                    </div>
+                    <div style={{ fontSize: 11, color: C.dim, fontFamily: C.ui }}>
+                      Place in <code style={{ color: C.muted, fontFamily: C.mono }}>Assets/WebGLTemplates/InitiaArcade/</code> · Custom loading screen + SDK ready
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+                  <a href="/WebGLTemplates.zip" download style={{
+                    padding: "9px 20px",
+                    background: `linear-gradient(135deg,${C.gold},#cc8800)`,
+                    borderRadius: 8, color: "#0a0600",
+                    fontSize: 12, fontWeight: 700, textDecoration: "none",
+                    fontFamily: C.ui, letterSpacing: "0.5px",
+                  }}>↓ Download Template</a>
+                </div>
+              </div>
+
+              {/* File structure */}
+              <CodeBlock id="templatepath" copied={copied} onCopy={copy} code={`YourUnityProject/
+└── Assets/
+    └── WebGLTemplates/
+        └── InitiaArcade/          ← Extract downloaded zip here
+            ├── index.html         ← Custom themed loading screen
+            ├── arcade-sdk.js      ← SDK (already included)
+            └── thumbnail.png      ← Template preview icon`} />
+
+              <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+                <InfoBox color={C.gold} icon="🎨">
+                  <strong>How to select in Unity:</strong>{" "}
+                  Edit → Project Settings → Player → Resolution and Presentation → WebGL Template → select <code style={{ fontFamily: C.mono }}>InitiaArcade</code>
+                </InfoBox>
+
+                {/* Width Height settings */}
+                <div style={{
+                  padding: "20px 22px",
+                  background: C.purpleDim,
+                  border: `1px solid ${C.borderHi}`,
+                  borderRadius: 10,
+                }}>
+                  <div style={{
+                    fontSize: 13, fontWeight: 700, color: C.text,
+                    fontFamily: C.ui, marginBottom: 14, letterSpacing: "0.3px",
+                    display: "flex", alignItems: "center", gap: 8,
+                  }}>
+                    📐 Set Canvas Width & Height
+                  </div>
+                  <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.75, marginBottom: 14, fontFamily: C.ui }}>
+                    Set your game resolution under Player Settings → Resolution and Presentation.
+                    The template automatically uses{" "}
+                    <code style={{ background: "#050408", padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>{`{{{ WIDTH }}}`}</code> and{" "}
+                    <code style={{ background: "#050408", padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>{`{{{ HEIGHT }}}`}</code> values from your Unity settings.
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {[
+                      ["Portrait game  (mobile-style)", "Default Canvas Width", "1080", "Default Canvas Height", "1920"],
+                      ["Landscape game (desktop-style)", "Default Canvas Width", "1920", "Default Canvas Height", "1080"],
+                      ["Square game", "Default Canvas Width", "1080", "Default Canvas Height", "1080"],
+                    ].map(([label, wLabel, w, hLabel, h]) => (
+                      <div key={label} style={{
+                        padding: "12px 16px",
+                        background: "#050408",
+                        borderRadius: 8, border: `1px solid ${C.border}`,
+                      }}>
+                        <div style={{ fontSize: 10, color: C.dim, fontFamily: C.ui, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>{label}</div>
+                        <div style={{ display: "flex", gap: 20 }}>
+                          <div>
+                            <div style={{ fontSize: 9, color: C.dim, fontFamily: C.mono, marginBottom: 3 }}>{wLabel}</div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: C.purple, fontFamily: C.mono }}>{w}</div>
+                          </div>
+                          <div style={{ width: 1, background: C.border }} />
+                          <div>
+                            <div style={{ fontSize: 9, color: C.dim, fontFamily: C.mono, marginBottom: 3 }}>{hLabel}</div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: C.cyan, fontFamily: C.mono }}>{h}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: 12 }}>
+                    <InfoBox color={C.blue} icon="ℹ">
+                      <code style={{ fontFamily: C.mono }}>Scale to Fit: true</code> — the template automatically resizes to fit the browser window while maintaining the correct aspect ratio. Portrait games will display full screen on mobile.
+                    </InfoBox>
+                  </div>
+                </div>
+              </div>
+            </Section>
             <Section>
               <SectionTitle sub="ArcadeBridge.jslib is the Unity WebGL plugin that exposes arcade_* functions to C# via DllImport. Place it in Assets/Plugins/WebGL/.">
                 Step 2 — Place ArcadeBridge.jslib in Assets/Plugins/WebGL/
@@ -745,6 +855,9 @@ git push
                 ✅ Pre-Submit Checklist
               </SectionTitle>
               <CodeBlock id="checklist" copied={copied} onCopy={copy} code={`Unity Source Project:
+  ✅ Assets/WebGLTemplates/InitiaArcade/   ← WebGL template installed
+  ✅ Player Settings → WebGL Template → InitiaArcade selected
+  ✅ Width/Height set (e.g. 1080×1920 portrait)
   ✅ Assets/Plugins/WebGL/ArcadeBridge.jslib     ← jslib plugin in WebGL subfolder
   ✅ ArcadeManager.cs attached to empty GameObject (Singleton — DontDestroyOnLoad)
   ✅ gameId = "YOUR_GAME_ID" (fill in Inspector after approval)

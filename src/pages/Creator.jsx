@@ -77,19 +77,19 @@ function GameModal({ game, onClose }) {
           <span style={{ padding: "3px 9px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: s.bg, color: s.color, border: `1px solid ${s.border}`, fontFamily: P.raj, letterSpacing: "0.5px" }}>{s.label}</span>
         </div>
 
-        {game.description && <div style={{ fontSize: 12, color: "#5533aa", lineHeight: 1.6, marginBottom: 16, fontFamily: P.raj }}>{game.description}</div>}
+        {game.description && <div style={{ fontSize: 12, color: "#9977cc", lineHeight: 1.6, marginBottom: 16, fontFamily: P.raj }}>{game.description}</div>}
 
         <div style={{ marginBottom: 18 }}>
           {[["Game ID", `#${game.gameId}`], ["Category", game.category], ["Reward Rate", `${game.rewardRate} ARCADE / play`], ["Total Plays", (game.plays||0).toLocaleString()], ["Creator Revenue", "20% of all rewards"]].map(([k,v]) => (
             <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, padding: "8px 0", borderBottom: `1px solid ${P.b}` }}>
-              <span style={{ color: "#5533aa", fontFamily: P.raj }}>{k}</span>
+              <span style={{ color: "#9977cc", fontFamily: P.raj }}>{k}</span>
               <span style={{ color: "#c4a0ff", fontFamily: P.raj, fontWeight: 600 }}>{v}</span>
             </div>
           ))}
         </div>
 
         <div style={{ background: P.bg, border: `1px solid ${P.b}`, borderRadius: 8, padding: 14, marginBottom: 12 }}>
-          <div style={{ fontSize: 9, color: "#5533aa", marginBottom: 8, textTransform: "uppercase", letterSpacing: "1px", fontFamily: P.raj, fontWeight: 700 }}>Unity Integration</div>
+          <div style={{ fontSize: 9, color: "#9977cc", marginBottom: 8, textTransform: "uppercase", letterSpacing: "1px", fontFamily: P.raj, fontWeight: 700 }}>Unity Integration</div>
           <div style={{ fontFamily: "monospace", fontSize: 11, color: "#9977cc", marginBottom: 8 }}>
             Application.ExternalCall("arcade_init", "{game.gameId}");
           </div>
@@ -121,7 +121,7 @@ function GateScreen({ icon, title, accent, sub, children }) {
         <h2 style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 32, textTransform: "uppercase", letterSpacing: "-0.3px", marginBottom: 10, color: "#fff" }}>
           {title} {accent && <span style={{ background: "linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{accent}</span>}
         </h2>
-        <p style={{ color: "#5533aa", fontSize: 13, marginBottom: 28, lineHeight: 1.75, fontFamily: P.raj }}>{sub}</p>
+        <p style={{ color: "#9977cc", fontSize: 13, marginBottom: 28, lineHeight: 1.75, fontFamily: P.raj }}>{sub}</p>
         {children}
       </div>
     </div>
@@ -153,7 +153,13 @@ export default function Creator() {
   const [timeLeft, setTimeLeft] = useState("");
   const [form, setForm] = useState({ name: "", description: "", iframeUrl: "", thumbnailUrl: "", category: "Action", rewardRate: "50" });
 
-  const categories = ["Action", "Runner", "Strategy", "Puzzle", "Casual", "Shooter", "Adventure","Simulation / Idle Tycoon","Music / Rhythm"];
+  const categories = [
+    "Action", "Runner", "Shooter", "Fighting",
+    "Strategy", "Tower Defense", "Puzzle", "Trivia",
+    "Casual", "Idle / Clicker", "Simulation", "Simulation / Idle Tycoon",
+    "Adventure", "RPG", "Platformer", "Sports",
+    "Racing", "Horror", "Music / Rhythm", "Card / Board",
+  ];
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const validateUrl = (url) => { try { new URL(url); return true; } catch { return false; } };
 
@@ -232,9 +238,9 @@ useEffect(() => {
   };
 
   const submitGame = async () => {
-    if (!form.name || !form.iframeUrl || !form.description) { setError("Fill in all required fields."); return; }
+    if (!form.name || !form.iframeUrl || !form.description || !form.thumbnailUrl) { setError("Fill in all required fields."); return; }
     if (!validateUrl(form.iframeUrl)) { setError("Enter a valid game URL."); return; }
-    if (form.thumbnailUrl && !validateUrl(form.thumbnailUrl)) { setError("Thumbnail URL is invalid."); return; }
+    if (!validateUrl(form.thumbnailUrl)) { setError("Thumbnail URL is invalid."); return; }
     setError(""); setLoading(true);
     try {
       const { getTotalGamesCount } = await import("../lib/gameService");
@@ -263,7 +269,7 @@ useEffect(() => {
   // ── STATE 1: Not connected
   if (!isConnected) return (
     <GateScreen icon="🎮" title="Creator" accent="Dashboard" sub="Connect your Initia wallet to publish games and earn ARCADE tokens.">
-      <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 16, fontSize: 12, color: "#5533aa", fontFamily: P.raj }}>
+      <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 16, fontSize: 12, color: "#9977cc", fontFamily: P.raj }}>
         Use the "Connect Wallet" button in the navbar to get started.
       </div>
     </GateScreen>
@@ -276,7 +282,7 @@ useEffect(() => {
         style={{ display: "inline-block", padding: "12px 28px", background: "linear-gradient(135deg,#7B2FFF,#5a1fd4)", border: "none", borderRadius: 8, color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none", fontFamily: P.raj, letterSpacing: "1px", textTransform: "uppercase", marginBottom: 14 }}>
         Get .init Username →
       </a>
-      <div style={{ fontSize: 11, color: "#3a2a5a", fontFamily: P.raj }}>After setting your username, come back and refresh.</div>
+      <div style={{ fontSize: 11, color: "#7755aa", fontFamily: P.raj }}>After setting your username, come back and refresh.</div>
     </GateScreen>
   );
 
@@ -284,7 +290,7 @@ useEffect(() => {
   if (creatorStatus === null && !creatorLoading) return (
     <GateScreen icon="🚀" title="Become a" accent="Creator" sub="Register as a game creator on InitiaArcade. Publish your games and earn 20% revenue from every play!">
       <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 20, marginBottom: 20, textAlign: "left" }}>
-        <div style={{ fontSize: 9, color: "#5533aa", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: P.raj, fontWeight: 700, marginBottom: 14 }}>Creator Benefits</div>
+        <div style={{ fontSize: 9, color: "#9977cc", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: P.raj, fontWeight: 700, marginBottom: 14 }}>Creator Benefits</div>
         {[
           ["💰", "Earn 20% Revenue", "Every time someone plays your game"],
           ["🎮", "Publish Games", "Deploy Unity WebGL games to our platform"],
@@ -295,7 +301,7 @@ useEffect(() => {
             <span style={{ fontSize: 16, flexShrink: 0 }}>{icon}</span>
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#c4a0ff", fontFamily: P.raj, marginBottom: 2 }}>{title}</div>
-              <div style={{ fontSize: 11, color: "#5533aa", fontFamily: P.raj }}>{desc}</div>
+              <div style={{ fontSize: 11, color: "#9977cc", fontFamily: P.raj }}>{desc}</div>
             </div>
           </div>
         ))}
@@ -304,7 +310,7 @@ useEffect(() => {
         <div style={{ width: 36, height: 36, borderRadius: "50%", background: P.p2, border: `1px solid ${P.pb}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>👤</div>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: "#c4a0ff", fontFamily: P.raj }}>{displayName}</div>
-          <div style={{ fontSize: 10, color: "#5533aa", fontFamily: "monospace" }}>{initiaAddress?.slice(0,20)}...</div>
+          <div style={{ fontSize: 10, color: "#9977cc", fontFamily: "monospace" }}>{initiaAddress?.slice(0,20)}...</div>
         </div>
       </div>
       <button onClick={registerAsCreator} disabled={registerLoading} style={{
@@ -327,7 +333,7 @@ useEffect(() => {
         <div style={{ fontSize: 36, fontWeight: 700, color: "#FFB800", fontFamily: P.orb, letterSpacing: "-1px" }}>{timeLeft || "Calculating..."}</div>
       </div>
       <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 16, marginBottom: 16, textAlign: "left" }}>
-        <div style={{ fontSize: 10, color: "#5533aa", marginBottom: 10, textTransform: "uppercase", letterSpacing: "1px", fontFamily: P.raj, fontWeight: 700 }}>While you wait:</div>
+        <div style={{ fontSize: 10, color: "#9977cc", marginBottom: 10, textTransform: "uppercase", letterSpacing: "1px", fontFamily: P.raj, fontWeight: 700 }}>While you wait:</div>
         {["Build your Unity WebGL game", "Set up your game thumbnail", "Prepare your game description"].map((t,i) => (
           <div key={i} style={{ display: "flex", gap: 8, fontSize: 12, color: "#7755aa", marginBottom: 7, fontFamily: P.raj }}>
             <span style={{ color: "#a67fff" }}>→</span><span>{t}</span>
@@ -343,7 +349,7 @@ useEffect(() => {
   // ── Loading
   if (creatorLoading) return (
     <div style={{ minHeight: "calc(100vh - 54px)", background: P.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ fontSize: 11, color: "#5533aa", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "2px" }}>Checking creator status...</div>
+      <div style={{ fontSize: 11, color: "#9977cc", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "2px" }}>Checking creator status...</div>
     </div>
   );
 
@@ -368,38 +374,26 @@ useEffect(() => {
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88", animation: "lbPulse 1.5s ease-in-out infinite" }} />
             Creator Hub · Initia-Arcade
           </div>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
-            <div>
-              <h1 style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 36, textTransform: "uppercase", letterSpacing: "-0.3px", color: "#fff", marginBottom: 6 }}>
-                Creator{" "}
-                <span style={{ background: "linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Dashboard</span>
-              </h1>
-              <p style={{ color: "#5533aa", fontSize: 12, fontFamily: P.raj }}>Manage your published games, track earnings, and publish new games.</p>
-            </div>
+          <h1 style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 36, textTransform: "uppercase", letterSpacing: "-0.3px", color: "#fff", marginBottom: 6 }}>
+            Creator{" "}
+            <span style={{ background: "linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Dashboard</span>
+          </h1>
+          <p style={{ color: "#9977cc", fontSize: 12, fontFamily: P.raj }}>Manage your published games, track earnings, and publish new games.</p>
+                
             <a href="/sdk" target="_blank" rel="noreferrer" style={{
               display: "inline-flex", alignItems: "center", gap: 7,
               padding: "10px 18px",
               background: "rgba(0,212,255,0.07)",
               border: "1px solid rgba(0,212,255,0.25)",
-              borderRadius: 8,
-              color: "#00d4ff",
+              borderRadius: 8, color: "#00d4ff",
               fontSize: 11, fontWeight: 700,
-              textDecoration: "none",
-              fontFamily: P.raj,
-              letterSpacing: "0.5px",
-              textTransform: "uppercase",
-              flexShrink: 0,
-              marginTop: 4,
-              transition: "all 0.18s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background="rgba(0,212,255,0.13)"; e.currentTarget.style.borderColor="rgba(0,212,255,0.45)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background="rgba(0,212,255,0.07)"; e.currentTarget.style.borderColor="rgba(0,212,255,0.25)"; }}
-            >
+              textDecoration: "none", fontFamily: P.raj,
+              letterSpacing: "0.5px", textTransform: "uppercase",
+              flexShrink: 0, marginTop: 4,
+            }}>
               📖 SDK Docs
             </a>
-          </div>
-        </div>
-
+                </div>
         {/* Profile card */}
         <div style={{ background: P.s1, border: `1px solid ${P.b2}`, borderRadius: 12, padding: "16px 22px", marginBottom: 22, display: "flex", alignItems: "center", gap: 16, position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: -30, right: -30, width: 150, height: 150, background: "radial-gradient(circle, rgba(123,47,255,0.12) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -409,16 +403,16 @@ useEffect(() => {
               <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 15, color: "#c4a0ff" }}>{displayName}</div>
               <span style={{ fontSize: 9, color: "#00FF88", background: "rgba(0,255,136,0.08)", padding: "2px 7px", borderRadius: 3, border: "1px solid rgba(0,255,136,0.15)", fontFamily: P.raj, fontWeight: 700 }}>verified ✓</span>
             </div>
-            <div style={{ fontSize: 10, color: "#3a2a5a", fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{initiaAddress}</div>
+            <div style={{ fontSize: 10, color: "#7755aa", fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{initiaAddress}</div>
           </div>
           <div style={{ display: "flex", flexShrink: 0, gap: 0 }}>
             {[
               { label: "Games", value: myGames.length, color: "#a67fff" },
-              { label: "Earned", value: totalEarned.toLocaleString() + " ARCADE", color: "#7B2FFF" },
+              
             ].map((s, i) => (
               <div key={s.label} style={{ textAlign: "center", padding: "8px 20px", borderLeft: i > 0 ? `1px solid ${P.b}` : "none" }}>
                 <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 20, color: s.color }}>{s.value}</div>
-                <div style={{ fontSize: 9, color: "#5533aa", marginTop: 2, fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "0.8px" }}>{s.label}</div>
+                <div style={{ fontSize: 9, color: "#9977cc", marginTop: 2, fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "0.8px" }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -443,17 +437,18 @@ useEffect(() => {
             </button>
           ))}
         </div>
+        
 
         {/* ── MY GAMES TAB ── */}
         {activeTab === "my-games" && (
           <div>
             {gamesLoading ? (
-              <div style={{ padding: 48, textAlign: "center", fontSize: 11, color: "#5533aa", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "2px" }}>Loading from database...</div>
+              <div style={{ padding: 48, textAlign: "center", fontSize: 11, color: "#9977cc", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "2px" }}>Loading from database...</div>
             ) : myGames.length === 0 ? (
               <div style={{ padding: 56, textAlign: "center" }}>
                 <div style={{ width: 60, height: 60, borderRadius: "50%", background: P.p2, border: `1px solid ${P.pb}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, margin: "0 auto 16px" }}>🎮</div>
                 <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 16, color: "#c4a0ff", marginBottom: 6 }}>No games yet</div>
-                <div style={{ fontSize: 12, color: "#5533aa", marginBottom: 20, fontFamily: P.raj }}>Submit your first game to get started</div>
+                <div style={{ fontSize: 12, color: "#9977cc", marginBottom: 20, fontFamily: P.raj }}>Submit your first game to get started</div>
                 <Btn onClick={() => setActiveTab("submit")}>Submit Your First Game →</Btn>
               </div>
             ) : (
@@ -476,7 +471,11 @@ useEffect(() => {
                         </div>
                         <div style={{ padding: "10px 12px" }}>
                           <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 13, color: "#d4b8ff", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{game.name}</div>
-                          <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj }}>Game #{game.gameId} · {game.category}</div>
+                          <div style={{ fontSize: 9, color: "#9977cc", marginBottom: 8, fontFamily: P.raj }}>Game #{game.gameId} · {game.category}</div>
+                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <span style={{ fontSize: 9, color: "#9977cc", fontFamily: P.raj }}>{(game.plays||0).toLocaleString()} plays</span>
+                            <span style={{ fontSize: 9, color: "#a67fff", fontFamily: P.orb, fontWeight: 600 }}>{game.earned||0} ARCADE</span>
+                          </div>
                         </div>
                       </div>
                     );
@@ -491,10 +490,10 @@ useEffect(() => {
                   onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(123,47,255,0.18)"; }}
                   >
                     <div style={{ fontSize: 24, color: "rgba(123,47,255,0.3)", fontFamily: P.raj, fontWeight: 700 }}>+</div>
-                    <div style={{ fontSize: 10, color: "#5533aa", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Submit New Game</div>
+                    <div style={{ fontSize: 10, color: "#9977cc", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Submit New Game</div>
                   </div>
                 </div>
-                <div style={{ marginTop: 10, padding: 12, background: "rgba(123,47,255,0.05)", border: `1px solid ${P.b}`, borderRadius: 8, fontSize: 11, color: "#5533aa", fontFamily: P.raj }}>
+                <div style={{ marginTop: 10, padding: 12, background: "rgba(123,47,255,0.05)", border: `1px solid ${P.b}`, borderRadius: 8, fontSize: 11, color: "#9977cc", fontFamily: P.raj }}>
                   Approval typically takes 24–48 hours. Click any game card to view details.
                 </div>
               </div>
@@ -503,74 +502,49 @@ useEffect(() => {
         )}
 
         {/* ── EARNINGS TAB ── */}
-        {activeTab === "earnings" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-
-            {/* Top row — Games Published + Token Utility */}
-            <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: 14 }}>
-
-              {/* Games Published */}
-              <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: "16px 18px", position: "relative", overflow: "hidden" }}>
-                <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, background: "radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
-                <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 28, color: "#00d4ff", marginBottom: 4 }}>{myGames.length}</div>
-                <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Games Published</div>
-              </div>
-
-              {/* Token Utility */}
-              <div style={{
-                background: "linear-gradient(135deg,rgba(123,47,255,0.1),rgba(0,212,255,0.05))",
-                border: `1px solid rgba(123,47,255,0.25)`,
-                borderRadius: 10, overflow: "hidden",
-                display: "grid", gridTemplateColumns: "1fr 1fr",
-              }}>
-                {/* Left — Live */}
-                <div style={{ padding: "14px 16px", borderRight: `1px solid ${P.b}` }}>
-                  <div style={{ fontSize: 8, color: "#00FF88", fontFamily: P.raj, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10, display: "flex", alignItems: "center", gap: 5 }}>
-                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88" }} />
-                    Live Now
-                  </div>
-                  {[
-                    { icon: "🎮", label: "Play & Earn",     desc: "80% to players" },
-                    { icon: "🏆", label: "Creator Revenue", desc: "20% per play" },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                      <span style={{ fontSize: 14 }}>{item.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "#a67fff", fontFamily: P.raj }}>{item.label}</div>
-                        <div style={{ fontSize: 9, color: "#5533aa", fontFamily: P.raj }}>{item.desc}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Right — Coming Soon */}
-                <div style={{ padding: "14px 16px" }}>
-                  <div style={{ fontSize: 8, color: "#FFB800", fontFamily: P.raj, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10 }}>
-                    🔮 Coming Soon
-                  </div>
-                  {[
-                    { icon: "🛒", label: "In-Game Shop"      },
-                    { icon: "🗳️", label: "Governance"        },
-                    { icon: "💎", label: "Staking"           },
-                    { icon: "🏅", label: "NFT Achievements"  },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
-                      <span style={{ fontSize: 12 }}>{item.icon}</span>
-                      <span style={{ fontSize: 10, color: "#7755aa", fontFamily: P.raj, fontWeight: 600 }}>{item.label}</span>
-                      <span style={{ marginLeft: "auto", fontSize: 7, color: "#FFB800", fontFamily: P.raj, fontWeight: 700, background: "rgba(255,184,0,0.08)", padding: "2px 6px", borderRadius: 3, border: "1px solid rgba(255,184,0,0.18)", flexShrink: 0 }}>SOON</span>
-                    </div>
-                  ))}
-                </div>
+{activeTab === "earnings" && (
+  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: 10 }}>
+      <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: "16px 18px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, background: "radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
+        <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 28, color: "#00d4ff", marginBottom: 4 }}>{myGames.length}</div>
+        <div style={{ fontSize: 9, color: "#9977cc", fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Games Published</div>
+      </div>
+      <div style={{ background: "linear-gradient(135deg,rgba(123,47,255,0.1),rgba(0,212,255,0.05))", border: `1px solid rgba(123,47,255,0.25)`, borderRadius: 10, overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+        <div style={{ padding: "14px 16px", borderRight: `1px solid ${P.b}` }}>
+          <div style={{ fontSize: 8, color: "#00FF88", fontFamily: P.raj, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10, display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF88" }} />Live Now
+          </div>
+          {[{ icon: "🎮", label: "Play & Earn", desc: "80% to players" }, { icon: "🏆", label: "Creator Revenue", desc: "20% per play" }].map((item, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <span style={{ fontSize: 14 }}>{item.icon}</span>
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#a67fff", fontFamily: P.raj }}>{item.label}</div>
+                <div style={{ fontSize: 9, color: "#9977cc", fontFamily: P.raj }}>{item.desc}</div>
               </div>
             </div>
+          ))}
+        </div>
+        <div style={{ padding: "14px 16px" }}>
+          <div style={{ fontSize: 8, color: "#FFB800", fontFamily: P.raj, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10 }}>🔮 Coming Soon</div>
+          {[{ icon: "🛒", label: "In-Game Shop" }, { icon: "🗳️", label: "Governance" }, { icon: "💎", label: "Staking" }, { icon: "🏅", label: "NFT Achievements" }].map((item, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
+              <span style={{ fontSize: 12 }}>{item.icon}</span>
+              <span style={{ fontSize: 10, color: "#7755aa", fontFamily: P.raj, fontWeight: 600 }}>{item.label}</span>
+              <span style={{ marginLeft: "auto", fontSize: 7, color: "#FFB800", fontFamily: P.raj, fontWeight: 700, background: "rgba(255,184,0,0.08)", padding: "2px 6px", borderRadius: 3, border: "1px solid rgba(255,184,0,0.18)", flexShrink: 0 }}>SOON</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
 
             {/* ARCADE Balance */}
             <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 20 }}>
               <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 14, color: "#c4a0ff", marginBottom: 4 }}>ARCADE Token Balance</div>
-              <div style={{ fontSize: 11, color: "#5533aa", marginBottom: 16, fontFamily: P.raj }}>Your real-time on-chain ARCADE balance.</div>
+              <div style={{ fontSize: 11, color: "#9977cc", marginBottom: 16, fontFamily: P.raj }}>Your real-time on-chain ARCADE balance.</div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: P.bg, borderRadius: 8, border: `1px solid ${P.b}` }}>
                 <div>
-                  <div style={{ fontSize: 9, color: "#5533aa", marginBottom: 4, fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>On-chain balance</div>
+                  <div style={{ fontSize: 9, color: "#9977cc", marginBottom: 4, fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>On-chain balance</div>
                   <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 26, color: "#a67fff" }}>
                     {arcadeBalance !== null ? `${Number(arcadeBalance).toLocaleString()} ARCADE` : "—"}
                   </div>
@@ -581,31 +555,13 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* Revenue Split */}
-            <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 20 }}>
-              <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 14, color: "#c4a0ff", marginBottom: 14 }}>Revenue Split</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 18 }}>
-                {[
-                  { label: "Player", pct: "80%", color: "#00FF88", desc: "Goes to player wallet" },
-                  { label: "Creator (You)", pct: "20%", color: "#7B2FFF", desc: "Your earnings per play" },
-                  { label: "Platform", pct: "0%", color: "#00d4ff", desc: "Protocol maintenance" },
-                ].map(r => (
-                  <div key={r.label} style={{ background: P.bg, borderRadius: 8, padding: 14, textAlign: "center" }}>
-                    <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 26, color: r.color, marginBottom: 4 }}>{r.pct}</div>
-                    <div style={{ fontSize: 11, color: "#c4a0ff", marginBottom: 3, fontFamily: P.raj, fontWeight: 700 }}>{r.label}</div>
-                    <div style={{ fontSize: 10, color: "#5533aa", fontFamily: P.raj }}>{r.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Claim Revenue */}
             <div style={{ background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10, padding: 20 }}>
               <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 14, color: "#c4a0ff", marginBottom: 4 }}>Claim Revenue</div>
-              <div style={{ fontSize: 11, color: "#5533aa", marginBottom: 16, fontFamily: P.raj }}>Withdraw your earned ARCADE tokens to your wallet.</div>
+              <div style={{ fontSize: 11, color: "#9977cc", marginBottom: 16, fontFamily: P.raj }}>Withdraw your earned ARCADE tokens to your wallet.</div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", background: P.bg, borderRadius: 8, border: `1px solid ${P.b}`, marginBottom: 12 }}>
                 <div>
-                  <div style={{ fontSize: 9, color: "#5533aa", marginBottom: 4, fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Claimable balance</div>
+                  <div style={{ fontSize: 9, color: "#9977cc", marginBottom: 4, fontFamily: P.raj, textTransform: "uppercase", letterSpacing: "1px" }}>Claimable balance</div>
                   <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 24, color: "#a67fff" }}>{totalEarned.toLocaleString()} ARCADE</div>
                 </div>
                 <Btn onClick={() => { setClaimLoading(true); setTimeout(() => { setClaimLoading(false); setClaimMsg("Contract update pending — coming soon!"); }, 1000); }} disabled={claimLoading || totalEarned === 0}>
@@ -655,9 +611,37 @@ useEffect(() => {
                     style={{ ...inputStyle, borderColor: form.iframeUrl ? (validateUrl(form.iframeUrl) ? "rgba(0,255,136,0.25)" : "rgba(255,68,68,0.25)") : P.b }} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Thumbnail URL <span style={{ color: "#3a2a5a" }}>Optional</span></label>
-                  <input name="thumbnailUrl" value={form.thumbnailUrl} onChange={handleChange} placeholder="https://i.imgur.com/abc123.jpg" className="cr-input"
+                  <label style={labelStyle}>Thumbnail URL <span style={{ color: "#ff4444" }}>*</span></label>
+                  <input name="thumbnailUrl" value={form.thumbnailUrl} onChange={handleChange} placeholder="https://res.cloudinary.com/your-cloud/image/upload/game.jpg" className="cr-input"
                     style={{ ...inputStyle, borderColor: form.thumbnailUrl ? (validateUrl(form.thumbnailUrl) ? "rgba(0,255,136,0.25)" : "rgba(255,68,68,0.25)") : P.b }} />
+                  <div style={{ marginTop: 6, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+                    <span style={{ fontSize: 10, color: "#9977cc", fontFamily: P.raj }}>
+                      Recommended: <strong style={{ color: "#a67fff" }}>1280×720px</strong> (16:9) · JPG or PNG · Max 2MB
+                    </span>
+                    <a href="https://cloudinary.com" target="_blank" rel="noreferrer" style={{
+                      fontSize: 9, color: "#00d4ff", fontFamily: P.raj, fontWeight: 700,
+                      textDecoration: "none", background: "rgba(0,212,255,0.07)",
+                      border: "1px solid rgba(0,212,255,0.2)", padding: "3px 10px", borderRadius: 4,
+                    }}>☁ Upload on Cloudinary →</a>
+                  </div>
+                  <div style={{ marginTop: 10, background: "rgba(0,212,255,0.05)", border: "1px solid rgba(0,212,255,0.15)", borderRadius: 8, padding: "12px 14px" }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#00d4ff", fontFamily: P.raj, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.8px" }}>
+                      ☁ How to get a Cloudinary URL
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                      {[
+                        "Go to cloudinary.com → Sign up for free",
+                        "Click 'Upload' → select your game thumbnail image",
+                        "Once uploaded, click the image → copy the URL shown",
+                        "Paste that URL in the field above",
+                      ].map((step, i) => (
+                        <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                          <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(0,212,255,0.15)", border: "1px solid rgba(0,212,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 700, color: "#00d4ff", fontFamily: P.orb, flexShrink: 0 }}>{i+1}</span>
+                          <span style={{ fontSize: 11, color: "#9977cc", fontFamily: P.raj, lineHeight: 1.6 }}>{step}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                   <div>
@@ -673,8 +657,9 @@ useEffect(() => {
                 </div>
                 {error && <div style={{ padding: 10, background: "rgba(255,68,68,0.07)", border: "1px solid rgba(255,68,68,0.2)", borderRadius: 7, color: "#ff4444", fontSize: 11, fontFamily: P.raj }}>{error}</div>}
                 <Btn onClick={() => {
-                  if (!form.name || !form.iframeUrl || !form.description) { setError("Please fill in all required fields."); return; }
+                  if (!form.name || !form.iframeUrl || !form.description || !form.thumbnailUrl) { setError("Please fill in all required fields."); return; }
                   if (!validateUrl(form.iframeUrl)) { setError("Please enter a valid game URL."); return; }
+                  if (!validateUrl(form.thumbnailUrl)) { setError("Please enter a valid thumbnail URL."); return; }
                   setError(""); setStep(2);
                 }} style={{ alignSelf: "flex-start", padding: "12px 28px" }}>
                   Continue to Review →
@@ -688,7 +673,7 @@ useEffect(() => {
                   <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 14, color: "#c4a0ff", marginBottom: 16 }}>Review your submission</div>
                   {[["Game Name", form.name], ["Description", form.description], ["Game URL", form.iframeUrl], ["Category", form.category], ["Reward Rate", `${form.rewardRate} ARCADE per play`], ["Creator", displayName || initiaAddress]].map(([k,v]) => (
                     <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, padding: "8px 0", borderBottom: `1px solid ${P.b}` }}>
-                      <span style={{ color: "#5533aa", minWidth: 130, fontFamily: P.raj }}>{k}</span>
+                      <span style={{ color: "#9977cc", minWidth: 130, fontFamily: P.raj }}>{k}</span>
                       <span style={{ color: "#c4a0ff", textAlign: "right", wordBreak: "break-all", fontFamily: P.raj, fontWeight: 600 }}>{v}</span>
                     </div>
                   ))}
@@ -710,12 +695,12 @@ useEffect(() => {
                   Game{" "}
                   <span style={{ background: "linear-gradient(90deg,#7B2FFF,#00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Submitted!</span>
                 </h2>
-                <p style={{ color: "#5533aa", fontSize: 12, maxWidth: 380, margin: "0 auto 24px", lineHeight: 1.75, fontFamily: P.raj }}>
+                <p style={{ color: "#9977cc", fontSize: 12, maxWidth: 380, margin: "0 auto 24px", lineHeight: 1.75, fontFamily: P.raj }}>
                   Your game is now in the review queue. Once approved, it will go live on InitiaArcade.
                 </p>
                 {newGameId && (
                   <div style={{ background: P.s1, border: `1px solid ${P.b2}`, borderRadius: 10, padding: 18, marginBottom: 12 }}>
-                    <div style={{ fontSize: 9, color: "#5533aa", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: P.raj, fontWeight: 700, marginBottom: 6 }}>Your Game ID</div>
+                    <div style={{ fontSize: 9, color: "#9977cc", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: P.raj, fontWeight: 700, marginBottom: 6 }}>Your Game ID</div>
                     <div style={{ fontFamily: P.orb, fontWeight: 700, fontSize: 32, color: "#a67fff", marginBottom: 10, letterSpacing: "-1px" }}>#{newGameId}</div>
                     <div style={{ fontFamily: "monospace", fontSize: 11, color: "#9977cc", background: P.bg, padding: "8px 12px", borderRadius: 6, border: `1px solid ${P.b}` }}>
                       Application.ExternalCall("arcade_init", "{newGameId}");
@@ -725,7 +710,7 @@ useEffect(() => {
                 {txHash && (
                   <div style={{ background: "rgba(0,255,136,0.06)", border: "1px solid rgba(0,255,136,0.15)", borderRadius: 8, padding: 14, marginBottom: 20 }}>
                     <div style={{ fontSize: 9, color: "#00FF88", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontFamily: P.raj, fontWeight: 700 }}>Transaction confirmed ✓</div>
-                    <div style={{ fontSize: 9, color: "#5533aa", wordBreak: "break-all", fontFamily: "monospace" }}>{txHash}</div>
+                    <div style={{ fontSize: 9, color: "#9977cc", wordBreak: "break-all", fontFamily: "monospace" }}>{txHash}</div>
                   </div>
                 )}
                 <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
