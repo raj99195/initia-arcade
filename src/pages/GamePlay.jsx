@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useInterwovenKit } from "@initia/interwovenkit-react";
 import { useAccount } from "wagmi";
-import EnableAutoSign from "../components/EnableAutoSign";
 import { useGames } from "../hooks/useGames";
 import { saveScore } from "../lib/gameService";
 
@@ -43,17 +42,17 @@ export default function GamePlay() {
   const { games } = useGames();
   const game = games.find(g => g.id === Number(gameId));
 
-  const { submitTxBlock, autoSign, initiaAddress } = useInterwovenKit();
+  const { requestTxBlock, initiaAddress } = useInterwovenKit();
   const { isConnected } = useAccount();
 
-  const [score, setScore]           = useState(0);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted]   = useState(false);
-  const [txHash, setTxHash]         = useState("");
-  const [submitError, setSubmitError] = useState("");
-  const [gameLoading, setGameLoading] = useState(true);
+  const [score, setScore]               = useState(0);
+  const [submitting, setSubmitting]     = useState(false);
+  const [submitted, setSubmitted]       = useState(false);
+  const [txHash, setTxHash]             = useState("");
+  const [submitError, setSubmitError]   = useState("");
+  const [gameLoading, setGameLoading]   = useState(true);
   const [tokensEarned, setTokensEarned] = useState(0);
-  const iframeRef    = useRef(null);
+  const iframeRef     = useRef(null);
   const submittingRef = useRef(false);
 
   useEffect(() => { if (games.length > 0) setGameLoading(false); }, [games]);
@@ -69,44 +68,98 @@ export default function GamePlay() {
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [autoSign, initiaAddress]);
+  }, [initiaAddress]);
 
   const submitScore = async (finalScore) => {
     if (submittingRef.current || !initiaAddress) return;
     submittingRef.current = true;
     setSubmitting(true); setSubmitError("");
     try {
-      const sender = initiaAddress;
+      const sender       = initiaAddress;
       const rewardRate   = game.rewardRate || 50;
       const playerReward = Math.floor(rewardRate * 80 / 100);
       const creatorReward= Math.floor(rewardRate * 20 / 100);
 
-      if (!autoSign?.isEnabledByChain?.[CHAIN_ID]) await autoSign.enable(CHAIN_ID);
+      // Submit score on-chain (wallet popup aayega)
+      const result = await requestTxBlock({
+        messages:[{
+          typeUrl:"/initia.move.v1.MsgExecute",
+          value:{
+            sender,
+            moduleAddress:CONTRACT,
+            moduleName:"leaderboard",
+            functionName:"submit_score",
+            typeArgs:[],
+            args:[encodeAddress(CONTRACT), encodeU64(game.id), encodeU64(finalScore)]
+          }
+        }]
+      });
 
-      const result = await submitTxBlock({ messages:[{ typeUrl:"/initia.move.v1.MsgExecute", value:{ sender, moduleAddress:CONTRACT, moduleName:"leaderboard", functionName:"submit_score", typeArgs:[], args:[encodeAddress(CONTRACT),encodeU64(game.id),encodeU64(finalScore)] } }], fee:{ amount:[{denom:"uinit",amount:"6000"}], gas:"400000" } });
-
+      // Player token mint
       try {
-        await submitTxBlock({ messages:[{ typeUrl:"/initia.move.v1.MsgExecute", value:{ sender, moduleAddress:CONTRACT, moduleName:"arcade_token", functionName:"auto_mint_reward", typeArgs:[], args:[encodeAddress(CONTRACT),encodeU64(finalScore),encodeU64(playerReward)] } }], fee:{ amount:[{denom:"uinit",amount:"6000"}], gas:"400000" } });
+        await requestTxBlock({
+          messages:[{
+            typeUrl:"/initia.move.v1.MsgExecute",
+            value:{
+              sender,
+              moduleAddress:CONTRACT,
+              moduleName:"arcade_token",
+              functionName:"auto_mint_reward",
+              typeArgs:[],
+              args:[encodeAddress(CONTRACT), encodeU64(finalScore), encodeU64(playerReward)]
+            }
+          }]
+        });
         setTokensEarned(playerReward);
       } catch(e){ console.warn("Player mint failed:",e); }
 
+      // Creator token mint
       try {
         const creatorHex = bech32ToHex(game.creator);
-        await submitTxBlock({ messages:[{ typeUrl:"/initia.move.v1.MsgExecute", value:{ sender, moduleAddress:CONTRACT, moduleName:"arcade_token", functionName:"init_player", typeArgs:[], args:[] } }], fee:{ amount:[{denom:"uinit",amount:"6000"}], gas:"400000" } });
-        await submitTxBlock({ messages:[{ typeUrl:"/initia.move.v1.MsgExecute", value:{ sender, moduleAddress:CONTRACT, moduleName:"arcade_token", functionName:"mint_to", typeArgs:[], args:[encodeAddress(creatorHex),encodeU64(creatorReward),encodeAddress(CONTRACT)] } }], fee:{ amount:[{denom:"uinit",amount:"6000"}], gas:"400000" } });
+        await requestTxBlock({
+          messages:[{
+            typeUrl:"/initia.move.v1.MsgExecute",
+            value:{
+              sender,
+              moduleAddress:CONTRACT,
+              moduleName:"arcade_token",
+              functionName:"mint_to",
+              typeArgs:[],
+              args:[encodeAddress(creatorHex), encodeU64(creatorReward), encodeAddress(CONTRACT)]
+            }
+          }]
+        });
       } catch(e){ console.warn("Creator mint failed:",e); }
 
+      // Record play
       try {
-        await submitTxBlock({ messages:[{ typeUrl:"/initia.move.v1.MsgExecute", value:{ sender, moduleAddress:CONTRACT, moduleName:"platform", functionName:"record_play_and_earn", typeArgs:[], args:[encodeAddress(CONTRACT),encodeU64(game.id),encodeU64(rewardRate)] } }], fee:{ amount:[{denom:"uinit",amount:"6000"}], gas:"400000" } });
+        await requestTxBlock({
+          messages:[{
+            typeUrl:"/initia.move.v1.MsgExecute",
+            value:{
+              sender,
+              moduleAddress:CONTRACT,
+              moduleName:"platform",
+              functionName:"record_play_and_earn",
+              typeArgs:[],
+              args:[encodeAddress(CONTRACT), encodeU64(game.id), encodeU64(rewardRate)]
+            }
+          }]
+        });
       } catch(e){ console.warn("Record play failed:",e); }
 
       await saveScore({ player:sender, score:finalScore, gameId:game.id, gameName:game.name, txHash:result.transactionHash });
-      setTxHash(result.transactionHash); setSubmitted(true);
+      setTxHash(result.transactionHash);
+      setSubmitted(true);
       iframeRef.current?.contentWindow?.postMessage({ type:"TRANSACTION_SUCCESS", _platform:true, txHash:result.transactionHash }, "*");
+
     } catch(err) {
       setSubmitError(err.message||"Transaction failed");
       iframeRef.current?.contentWindow?.postMessage({ type:"TRANSACTION_FAILED", _platform:true, error:err.message }, "*");
-    } finally { setSubmitting(false); submittingRef.current=false; }
+    } finally {
+      setSubmitting(false);
+      submittingRef.current = false;
+    }
   };
 
   if (gameLoading) return (
@@ -128,7 +181,6 @@ export default function GamePlay() {
   const rewardRate    = game.rewardRate || 50;
   const playerReward  = Math.floor(rewardRate * 80 / 100);
   const creatorReward = Math.floor(rewardRate * 20 / 100);
-  const autoSignOn    = autoSign?.isEnabledByChain?.[CHAIN_ID];
 
   return (
     <div style={{ minHeight:"calc(100vh - 54px)", background:P.bg, padding:"16px 36px 16px" }}>
@@ -136,24 +188,15 @@ export default function GamePlay() {
 
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:12 }}>
-        <button onClick={() => navigate("/games")} style={{
-          background:"rgba(123,47,255,0.06)", border:`1px solid ${P.b}`,
-          borderRadius:7, color:"#7755aa", fontSize:11, padding:"7px 14px", cursor:"pointer",
-          fontFamily:P.raj, fontWeight:700, letterSpacing:"0.5px", transition:"all 0.18s",
-        }}
-        onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(123,47,255,0.35)"; e.currentTarget.style.color="#c4a0ff";}}
-        onMouseLeave={e=>{e.currentTarget.style.borderColor=P.b; e.currentTarget.style.color="#7755aa";}}
-        >← Back</button>
-
-        <div>
-          <h1 style={{ fontFamily:P.raj, fontWeight:700, fontSize:22, textTransform:"uppercase", color:"#fff", letterSpacing:"-0.3px", marginBottom:2 }}>
-            {game.emoji||"🎮"} {game.name}
-          </h1>
-          <p style={{ fontSize:11, color:"#5533aa", fontFamily:P.raj }}>{game.description}</p>
-        </div>
-
-        <div style={{ marginLeft:"auto" }}>
-          <EnableAutoSign />
+        <button onClick={() => navigate(-1)} style={{ padding:"6px 14px", background:"rgba(123,47,255,0.08)", border:`1px solid ${P.b}`, borderRadius:7, color:"#a67fff", fontSize:12, cursor:"pointer", fontFamily:P.raj, fontWeight:700 }}>
+          ← Back
+        </button>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ width:36, height:36, borderRadius:8, background:"rgba(123,47,255,0.2)", border:`1px solid ${P.b2}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18 }}>🎮</div>
+          <div>
+            <div style={{ fontFamily:P.raj, fontWeight:700, fontSize:16, color:"#d4b8ff", textTransform:"uppercase" }}>{game.name}</div>
+            <p style={{ fontSize:11, color:"#5533aa", fontFamily:P.raj }}>{game.description}</p>
+          </div>
         </div>
       </div>
 
@@ -166,9 +209,8 @@ export default function GamePlay() {
             <iframe ref={iframeRef} src={game.iframeUrl} style={{ width:"100%", height:"calc(100vh - 54px - 120px)", minHeight:480, border:"none", display:"block" }} allow="fullscreen" title={game.name} />
           ) : (
             <div style={{ height:"calc(100vh - 54px - 120px)", minHeight:480, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:14 }}>
-              <div style={{ fontSize:56, filter:"drop-shadow(0 0 16px rgba(123,47,255,0.5))" }}>{game.emoji||"🎮"}</div>
+              <div style={{ fontSize:56, filter:"drop-shadow(0 0 16px rgba(123,47,255,0.5))" }}>🎮</div>
               <div style={{ fontFamily:P.raj, fontWeight:700, fontSize:14, color:"#7755aa" }}>Game coming soon</div>
-              <div style={{ fontFamily:P.raj, fontSize:11, color:"#3a2a5a" }}>Unity WebGL build not yet linked</div>
               <button onClick={() => { const s=Math.floor(Math.random()*10000); setScore(s); submitScore(s); }} style={{
                 marginTop:8, padding:"10px 24px",
                 background:"linear-gradient(135deg,#7B2FFF,#5a1fd4)",
@@ -196,27 +238,8 @@ export default function GamePlay() {
             </div>
           </div>
 
-          {/* Auto-sign status */}
-          <div style={{ background:P.s1, border:`1px solid ${P.b}`, borderRadius:10, padding:"14px 18px" }}>
-            <div style={{ fontSize:9, color:"#5533aa", textTransform:"uppercase", letterSpacing:"1.5px", fontFamily:P.raj, fontWeight:700, marginBottom:10 }}>Auto-Sign</div>
-            {autoSignOn ? (
-              <div>
-                <div style={{ display:"flex", alignItems:"center", gap:7, fontFamily:P.raj, fontWeight:700, fontSize:12, color:"#00FF88", marginBottom:5 }}>
-                  <span style={{ width:6, height:6, background:"#00FF88", borderRadius:"50%", animation:"lbPulse 1.5s ease-in-out infinite" }} />
-                  Active — no popups
-                </div>
-                <div style={{ fontSize:10, color:"#5533aa", fontFamily:P.raj }}>Scores submit automatically on game over</div>
-              </div>
-            ) : (
-              <div>
-                <div style={{ fontSize:11, color:"#5533aa", marginBottom:8, fontFamily:P.raj }}>Enable for seamless score submission</div>
-                <EnableAutoSign />
-              </div>
-            )}
-          </div>
-
           {/* Manual submit button */}
-          {!autoSignOn && score > 0 && !submitted && (
+          {score > 0 && !submitted && (
             <button onClick={() => submitScore(score)} disabled={submitting || !isConnected || !initiaAddress} style={{
               padding:"12px",
               background: submitting ? "rgba(123,47,255,0.1)" : "linear-gradient(135deg,#7B2FFF,#5a1fd4)",
@@ -226,7 +249,7 @@ export default function GamePlay() {
               cursor: submitting ? "not-allowed" : "pointer",
               fontFamily:P.raj, letterSpacing:"0.5px", textTransform:"uppercase", transition:"all 0.18s",
             }}>
-              {submitting ? "Submitting..." : "Submit Score On-Chain"}
+              {submitting ? "Submitting..." : "⛓ Submit Score On-Chain"}
             </button>
           )}
 
@@ -234,6 +257,7 @@ export default function GamePlay() {
           {submitting && (
             <div style={{ background:"rgba(123,47,255,0.06)", border:`1px solid ${P.b}`, borderRadius:9, padding:14, textAlign:"center" }}>
               <div style={{ fontFamily:P.raj, fontSize:11, color:"#a67fff" }}>Submitting score to blockchain...</div>
+              <div style={{ fontSize:10, color:"#5533aa", fontFamily:P.raj, marginTop:4 }}>Approve in your wallet</div>
             </div>
           )}
 
@@ -264,12 +288,12 @@ export default function GamePlay() {
           <div style={{ background:P.s1, border:`1px solid ${P.b}`, borderRadius:10, padding:"14px 18px" }}>
             <div style={{ fontSize:9, color:"#5533aa", textTransform:"uppercase", letterSpacing:"1.5px", fontFamily:P.raj, fontWeight:700, marginBottom:12 }}>Game Info</div>
             {[
-              ["Category",      game.category],
-              ["Player Reward", `+${playerReward} ARCADE`],
-              ["Creator Reward",`+${creatorReward} ARCADE`],
-              ["Total Plays",   (game.plays||0).toLocaleString()],
-              ["Chain",         "initiation-2"],
-              ["Contract",      CONTRACT.slice(0,10)+"..."],
+              ["Category",       game.category],
+              ["Player Reward",  `+${playerReward} ARCADE`],
+              ["Creator Reward", `+${creatorReward} ARCADE`],
+              ["Total Plays",    (game.plays||0).toLocaleString()],
+              ["Chain",          "initiation-2"],
+              ["Contract",       CONTRACT.slice(0,10)+"..."],
             ].map(([k,v]) => (
               <div key={k} style={{ display:"flex", justifyContent:"space-between", fontSize:11, padding:"6px 0", borderBottom:`1px solid ${P.b}` }}>
                 <span style={{ color:"#5533aa", fontFamily:P.raj }}>{k}</span>
