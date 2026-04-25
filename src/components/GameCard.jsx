@@ -130,8 +130,7 @@ export default function GameCard({ game }) {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
           <span style={{ fontSize: 10, color: "#7755aa", fontFamily: "'Rajdhani',sans-serif" }}>
-            {(game.plays || 0).toLocaleString()} players
-          </span>
+                   </span>
           <span style={{ fontSize: 10, color: "#a67fff", fontFamily: "'Orbitron',sans-serif", fontWeight: 600 }}>
             +{game.reward || game.rewardRate || 50} ARCADE
           </span>

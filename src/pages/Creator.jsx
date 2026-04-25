@@ -80,7 +80,7 @@ function GameModal({ game, onClose }) {
         {game.description && <div style={{ fontSize: 12, color: "#9977cc", lineHeight: 1.6, marginBottom: 16, fontFamily: P.raj }}>{game.description}</div>}
 
         <div style={{ marginBottom: 18 }}>
-          {[["Game ID", `#${game.gameId}`], ["Category", game.category], ["Reward Rate", `${game.rewardRate} ARCADE / play`], ["Total Plays", (game.plays || 0).toLocaleString()], ["Creator Revenue", "20% of all rewards"]].map(([k, v]) => (
+          {[["Game ID", `#${game.gameId}`], ["Category", game.category], ["Reward Rate", `${game.rewardRate} ARCADE / play`], ["Creator Revenue", "20% of all rewards"]].map(([k, v]) => (
             <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, padding: "8px 0", borderBottom: `1px solid ${P.b}` }}>
               <span style={{ color: "#9977cc", fontFamily: P.raj }}>{k}</span>
               <span style={{ color: "#c4a0ff", fontFamily: P.raj, fontWeight: 600 }}>{v}</span>
@@ -522,19 +522,18 @@ export default function Creator() {
                         background: P.s1, border: `1px solid ${P.b}`, borderRadius: 10,
                         overflow: "hidden", cursor: "pointer", transition: "all 0.2s",
                       }}>
-                        <div style={{ height: 110, background: "#0a0818", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, position: "relative", overflow: "hidden" }}>
-                          {game.thumbnailUrl
-                            ? <img src={game.thumbnailUrl} alt={game.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
-                            : <span style={{ filter: "drop-shadow(0 0 10px rgba(123,47,255,0.4))" }}>🎮</span>
+                        <div style={{ width:"100%", paddingTop:"56.25%", position:"relative", background:"#0a0818", overflow:"hidden" }}>
+                          {(game.thumbnailUrl && game.thumbnailUrl !== "")
+                            ? <img src={game.thumbnailUrl} alt={game.name} style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", objectFit:"cover", objectPosition:"center" }} onError={e => { e.target.style.display="none"; }} />
+                            : <span style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", fontSize:32, filter:"drop-shadow(0 0 10px rgba(123,47,255,0.4))" }}>🎮</span>
                           }
-                          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "linear-gradient(to top, rgba(14,12,26,0.9), transparent)", pointerEvents: "none" }} />
-                          <span style={{ position: "absolute", top: 8, left: 8, padding: "3px 8px", borderRadius: 4, fontSize: 8, fontWeight: 700, background: s.bg, color: s.color, border: `1px solid ${s.border}`, fontFamily: P.raj, letterSpacing: "0.5px" }}>{s.label}</span>
+                          <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"50%", background:"linear-gradient(to top, rgba(14,12,26,0.9), transparent)", pointerEvents:"none" }} />
+                          <span style={{ position:"absolute", top:8, left:8, padding:"3px 8px", borderRadius:4, fontSize:8, fontWeight:700, background:s.bg, color:s.color, border:`1px solid ${s.border}`, fontFamily:P.raj, letterSpacing:"0.5px" }}>{s.label}</span>
                         </div>
                         <div style={{ padding: "10px 12px" }}>
                           <div style={{ fontFamily: P.raj, fontWeight: 700, fontSize: 13, color: "#d4b8ff", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{game.name}</div>
                           <div style={{ fontSize: 9, color: "#9977cc", marginBottom: 8, fontFamily: P.raj }}>Game #{game.gameId} · {game.category}</div>
-                          <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <span style={{ fontSize: 9, color: "#9977cc", fontFamily: P.raj }}>{(game.plays || 0).toLocaleString()} plays</span>
+                          <div style={{ display: "flex", justifyContent: "flex-end" }}>
                             <span style={{ fontSize: 9, color: "#a67fff", fontFamily: P.orb, fontWeight: 600 }}>{game.earned || 0} ARCADE</span>
                           </div>
                         </div>
